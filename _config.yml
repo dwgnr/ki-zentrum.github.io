@@ -19,6 +19,7 @@ include:
 
 exclude:
   - Gemfile
+  - vendor
   
 sass:
   sass_dir: _sass
