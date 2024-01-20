@@ -1,0 +1,59 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+title: Ohm KI Zentrum
+email: kiz-leitung@th-nuernberg.de
+description: > # this means to ignore newlines until "baseurl:"
+  Website of the Ohm KI Zentrum
+baseurl: ""
+url: https://ki-zentrum.github.io
+
+include:
+  - .htaccess
+  - _pages
+
+exclude:
+  - Gemfile
+  
+sass:
+  sass_dir: _sass
+
+
+
+# Conversion
+markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
+
+
+# Markdown Processing
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
+  parse_block_html: true # default for kramdown is false. This will enable using Markdown links
+
+
+scholar:
+  source: _data
+  style: elsevier-harvard
+  sort_by: year, month
+  order: descending
+  group_by: year, type
+  group_order: descending
+  bibliography_template: {{ reference }}
+  type_names:
+    misc: Talks
+    patent: Patents
