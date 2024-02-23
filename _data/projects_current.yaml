@@ -1,0 +1,19 @@
+- name: BESS-KI
+  start: 11/2023
+  end: 6/2025
+  url: /research/bess-ki/
+  description: >
+    Automating preschool children speech and language assessment
+  image: /images/projects/AdobeStock_574183420.jpeg
+
+- name: Spirio Sessions
+  start: 6/2020
+  url: /research/spirio-sessions/
+  description: >
+    Can artificial intelligence collaborate with humans in creative 
+    processes at the same level? What would this collaboration look like? 
+    These complex questions form the basis for the research conducted by 
+    academics at Nuremberg Tech and Nuremberg University of Music as part 
+    of an interdisciplinary project funded by LEONARDO - Center for 
+    Creativity and Innovation.
+  image: /images/projects/spirio-sessions.jpg

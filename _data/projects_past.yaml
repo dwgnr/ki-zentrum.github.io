@@ -1,0 +1,13 @@
+- name: ISAKI
+  start: 4/2021
+  end: 12/2023
+  description: >
+    Anomaly detection in sensor data and nlp for event classification.
+  image: /images/projects/AdobeStock_574183420.jpeg
+
+- name: ENOM
+  start: 4/2018
+  end: 12/2022
+  description: >
+    Detecting and classifying stutter-related disfluencies
+  image: /images/projects/AdobeStock_574183420.jpeg
