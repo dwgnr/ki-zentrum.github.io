@@ -1,6 +1,6 @@
 ---
 title: "KIZ Publications"
-layout: gridlay
+layout: default
 excerpt: "KIZ -- Publications."
 sitemap: false
 permalink: /publications/

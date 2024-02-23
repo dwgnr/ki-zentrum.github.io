@@ -2,65 +2,83 @@
   photo: bio-photo.jpg
   info: Professor
   email: tobias.bocklet@th-nuernberg.de
-  # education: 
-  #   - Diplom-Informatik, FAU Universität Erlangen-Nürnberg, 2007
-  #   - PhD, FAU Universität Erlangen-Nürnberg, 2011
+
 
 - name: Korbinian Riedhammer
   photo: bio-photo.jpg
   info: Professor
   email: korbinian.riedhammer@th-nuernberg.de
-  # education:
-  #   - Diplom-Informatik, FAU Universität Erlangen-Nürnberg, 2007
-  #   - Doktor-Ingenieur, FAU Universität Erlangen-Nürnberg, 2012
-  #   - Postdoc International Computer Science Institute, Berkeley, CA, 2013
 
 - name: Ilja Baumann
   photo: bio-photo.jpg
   info: Research Scientist
   subject: children speech
+  project: besski
+  email: ilja.baumann@th-nuernberg.de
 
 - name: Franziska Braun
   photo: bio-photo.jpg
   info: Research Scientist
   subject: dementia classification
+  project: 
+    - dementia
+    - ttz
+  email: franziska.braunn@th-nuernberg.de
 
 - name: Maximilian Bundscherer
   photo: bio-photo.jpg
   info: Research Scientist
   subject: remote sensing
+  project:
+    - ttz
+    - radios
+  email: maximilian.bundscherer@th-nuernberg.de
 
 - name: Thomas Ranzenberger
   photo: bio-photo.jpg
   info: Research Scientist
   subject: speech recognition, mlops
+  project: hans
+  email: thomas.ranzenberger@th-nuernberg.de
 
 - name: Thomas Schmitt
   photo: bio-photo.jpg
   info: Research Scientist
   subject: computer vision
+  project:
+    - ttz
+    - saegen
+    - semmeln
+  email: thomas.schmitt@th-nuernberg.de
 
 - name: Fabian Schneider
   photo: bio-photo.jpg
   info: Research Scientist
   subject: topic segmentation
+  project: hans
+  email: fabian.baumann@th-nuernberg.de
 
 - name: Philipp Seeberger
   photo: bio-photo.jpg
   info: Research Scientist
   subject: natural language processing
+  project:
+    - isaki
+    - ttz
+    - fitness
+  email: philipp.seeberger@th-nuernberg.de
 
 - name: Christopher Simic
   photo: bio-photo.jpg
   info: Research Scientist
   subject: audio-visual speech recognition
+  project:
+    - hans
+  email: christopher.simic@th-nuernberg.de
 
 - name: Dominik Wagner
   photo: bio-photo.jpg
   info: Research Scientist
-  subject: speech recognition
-
-- name: "This could be you !"
-  photo: bio-photo.jpg
-  info: See <a href="/join-us/">join us</a> for more info
-  email: kiz-leitung@th-nuernberg.de
+  subject: speech recognition, gpu cluster admin
+  project: nnfuze
+  email: dominik.wagner@th-nuernberg.de

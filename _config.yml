@@ -7,9 +7,7 @@
 
 # Site settings
 title: Ohm KI Zentrum
-email: kiz-leitung@th-nuernberg.de
-description: > # this means to ignore newlines until "baseurl:"
-  Website of the Ohm KI Zentrum
+email: ki-zentrum@th-nuernberg.de
 baseurl: ""
 url: https://ki-zentrum.github.io
 
@@ -19,10 +17,9 @@ include:
 
 exclude:
   - Gemfile
+  - Gemfile.lock
   - vendor
-  
-sass:
-  sass_dir: _sass
+  - .ruby-version
 
 
 
@@ -44,7 +41,7 @@ kramdown:
   toc_levels: 1..6
   smart_quotes: lsquo,rsquo,ldquo,rdquo
   enable_coderay: false
-  parse_block_html: true # default for kramdown is false. This will enable using Markdown links
+  #parse_block_html: true # default for kramdown is false. This will enable using Markdown links
 
 
 scholar:

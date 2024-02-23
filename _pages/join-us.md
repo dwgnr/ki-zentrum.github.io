@@ -1,6 +1,6 @@
 ---
 title: "KIZ: Join us!"
-layout: textlay
+layout: default
 excerpt: "KIZ -- Join us!"
 sitemap: false
 permalink: /join-us/
