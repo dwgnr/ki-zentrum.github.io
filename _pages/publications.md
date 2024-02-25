@@ -9,4 +9,4 @@ permalink: /publications/
 
 # Publications
 
-{% bibliography --file refs %}
+{% bibliography %}
