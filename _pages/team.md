@@ -12,14 +12,28 @@ permalink: /team/
 ## Research Staff
 
 {% for member in site.data.staff_scientific %}
-<div class="card mb-3" style="max-width: 540px;">
+<div class="card mb-3 w-75">
   <div class="row g-0">
     <div class="col-md-4">
       <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start" alt="...">
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">{{ member.name }}</h5>
+        <h5 class="card-title">
+          {{ member.name }}
+          {% if member.twitter %}
+          <a href="https://twitter.com/{{member.twitter}}"><i class="fa-brands fa-twitter"></i></a>
+          {% endif %}
+          {% if member.gscholar %}
+          <a href="https://scholar.google.de/citations?user={{member.gscholar}}"><i class="fa-brands fa-google-scholar"></i></a>
+          {% endif %}
+          {% if member.orcid %}
+          <a href="https://orcid.org/{{member.orcid}}"><i class="fa-brands fa-orcid"></i></a>
+          {% endif %}
+          {% if member.arxiv %}
+          <a href="https://arxiv.org/a/{{member.arxiv}}.html"><img src="/images/arxiv-logo.svg" style="display: inline-block; height: 1em;"></a>
+          {% endif %}
+        </h5>
         <p class="card-text">{{ member.info }}</p>
         {% if member.subject %}
         <p class="card-text"><i class="fa-solid fa-graduation-cap"></i> {{ member.subject }}</p>
@@ -31,7 +45,13 @@ permalink: /team/
           {% endfor %}
         </p>
         {% endif %}
-        <p class="card-text"><small class="text-body-secondary"><i class="fa-solid fa-envelope"></i> {{ member.email }} </small></p>
+        <p class="card-text">
+          <small class="text-body-secondary"><i class="fa-solid fa-envelope"></i> {{ member.email }}
+          {% if member.pgp %}
+            <br/><i class="fa-solid fa-key"></i> <a href="https://keys.openpgp.org/vks/v1/by-fingerprint/{{member.pgp}}" target="_blank">{{ member.pgp }}</a>
+          {% endif %}
+          </small>
+        </p>
       </div>
     </div>
   </div>
@@ -42,7 +62,7 @@ permalink: /team/
 ## Administrative Support
 
 {% for member in site.data.staff_admin %}
-<div class="card mb-3" style="max-width: 540px;">
+<div class="card mb-3 w-75">
   <div class="row g-0">
     <div class="col-md-4">
       <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start" alt="...">
@@ -50,8 +70,19 @@ permalink: /team/
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title">{{ member.name }}</h5>
-        <p class="card-text">{{ member.info }}</p>
-        <p class="card-text"><small class="text-body-secondary"><i class="fa-solid fa-envelope"></i> {{ member.email }}</small></p>
+        <p class="card-text">
+          {{ member.info }}
+          {% if member.twitter %}
+          <a href="https://twitter.com/{{member.twitter}}"><i class="fa-brands fa-twitter"></i></a>
+          {% endif %}
+        </p>
+        <p class="card-text">
+          <small class="text-body-secondary"><i class="fa-solid fa-envelope"></i> {{ member.email }}
+          {% if member.pgp %}
+            <br/><i class="fa-solid fa-key"></i> <a href="https://keys.openpgp.org/vks/v1/by-fingerprint/{{member.pgp}}" target="_blank">{{ member.pgp }}</a>
+          {% endif %}
+          </small>
+        </p>
       </div>
     </div>
   </div>
@@ -62,16 +93,36 @@ permalink: /team/
 ## Alumni
 
 {% for member in site.data.alumni %}
-<div class="card mb-3" style="max-width: 540px;">
+<div class="card mb-3 w-75">
   <div class="row g-0">
     <div class="col-md-4">
       <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start" alt="...">
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">{{ member.name }}</h5>
+        <h5 class="card-title">
+          {{ member.name }}
+          {% if member.twitter %}
+          <a href="https://twitter.com/{{member.twitter}}"><i class="fa-brands fa-twitter"></i></a>
+          {% endif %}
+          {% if member.gscholar %}
+          <a href="https://scholar.google.de/citations?user={{member.gscholar}}"><i class="fa-brands fa-google-scholar"></i></a>
+          {% endif %}
+          {% if member.orcid %}
+          <a href="https://orcid.org/{{member.orcid}}"><i class="fa-brands fa-orcid"></i></a>
+          {% endif %}
+          {% if member.arxiv %}
+          <a href="https://arxiv.org/a/{{member.arxiv}}.html"><img src="/images/arxiv-logo.svg" style="display: inline-block; height: 1em;"></a>
+          {% endif %}
+        </h5>
         <p class="card-text">{{ member.info }}</p>
-        <p class="card-text"><small class="text-body-secondary"><i class="fa-solid fa-envelope"></i> {{ member.email }}</small></p>
+        <p class="card-text">
+          <small class="text-body-secondary"><i class="fa-solid fa-envelope"></i> {{ member.email }}
+          {% if member.pgp %}
+            <br/><i class="fa-solid fa-key"></i> <a href="https://keys.openpgp.org/vks/v1/by-fingerprint/{{member.pgp}}" target="_blank">{{ member.pgp }}</a>
+          {% endif %}
+          </small>
+        </p>
       </div>
     </div>
   </div>
