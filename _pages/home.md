@@ -7,10 +7,10 @@ permalink: /
 ---
 
 <div class="card mb-3">
-  <img src="/images/team/team-kiz-2022.jpg" class="card-img-top" alt="Team Picture from 2022">
+  <img src="/images/team/team-kiz-dec-2023.jpeg" class="card-img-top" alt="Team Picture from 2023">
   <div class="card-body">
     <p class="card-text">Team picture</p>
-    <p class="card-text"><small class="text-muted">Team in 9/2022</small></p>
+    <p class="card-text"><small class="text-muted">Team in 12/2023</small></p>
   </div>
 </div>
 
