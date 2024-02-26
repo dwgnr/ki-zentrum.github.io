@@ -84,8 +84,11 @@
   email: christopher.simic@th-nuernberg.de
 
 - name: Dominik Wagner
-  photo: bio-photo.jpg
+  photo: bio-photo-wagner.jpg
   info: Research Scientist
   subject: speech recognition, gpu cluster admin
   project: nnfuze
+  orcid: 0009-0006-7293-9131
+  gscholar: 0ouufoAAAAAJ
+  pgp: 8394C75E6AB52348141D913B6BC4768F9B6AEEC2
   email: dominik.wagner@th-nuernberg.de
