@@ -76,13 +76,15 @@
   email: fabian.baumann@th-nuernberg.de
 
 - name: Philipp Seeberger
-  photo: bio-photo.jpg
+  photo: bio-photo-seeberger.jpg
   info: Research Scientist
   subject: natural language processing
   project:
     - isaki
     - ttz
     - fitness
+  orcid: 0009-0003-3161-5120
+  gscholar: uCE4Gz4AAAAJ
   email: philipp.seeberger@th-nuernberg.de
 
 - name: Christopher Simic
