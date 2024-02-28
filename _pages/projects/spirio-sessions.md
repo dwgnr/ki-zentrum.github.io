@@ -29,4 +29,6 @@ The project was also covered in the media, e.g.:
 - [Süddeutsche Zeitung from Feb 12, 2021](https://www.sueddeutsche.de/bayern/nuernberg-forschung-kuenstliche-intelligenz-1.5204122)
 
 
+### References
+
 {% bibliography --cited --group_by none %}

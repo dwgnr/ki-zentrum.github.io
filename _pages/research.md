@@ -1,5 +1,5 @@
 ---
-title: "Projects"
+title: "Research"
 layout: page
 sitemap: false
 permalink: /research/
