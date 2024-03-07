@@ -8,7 +8,7 @@
 # Site settings
 title: Ohm KI Zentrum
 email: ki-zentrum@th-nuernberg.de
-baseurl: ""
+baseurl: "/"
 url: https://ki-zentrum.github.io
 
 include:
