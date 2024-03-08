@@ -10,7 +10,7 @@ _Note: Since §5 TMG only applies to Germany, this legal notice is only availabl
 ## Herausgeber
 
 Das Internetangebot der Technischen Hochschule Nürnberg Georg Simon Ohm wird im Auftrag des Präsidenten der Hochschule, Prof. Dr. Niels Oberbeck, veröffentlicht.
-Diese Website wurde von Studierenden der Akademie der Bildenden Künste Nürnberg und der Technischen Hochschule Nürnberg gestaltet.
+
 
 ## Anschrift
 
@@ -91,4 +91,4 @@ Sofern einzelne oder mehrere Regelungen der vorstehenden Bestimmungen der gelten
 
 Alle aus dieser Website entstehenden Rechtsstreitigkeiten unterliegen ausschließlich deutschem Recht.
 
-Geändert: 7. März 2024
+Geändert: 8. März 2024
