@@ -21,3 +21,4 @@ Interested in doing a Bachelor's or Master's thesis at our lab?
 We currently offer the following topics:
 
 - [Video Lecture Segmentation](/open-theses/video-lecture-segmentation)
+- [LLM-based Dialog Modeling for Stuttering Therapy](/open-theses/llm-dialog-stuttering)
