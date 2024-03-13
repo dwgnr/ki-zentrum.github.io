@@ -17,3 +17,21 @@
     of an interdisciplinary project funded by LEONARDO - Center for 
     Creativity and Innovation.
   image: /images/projects/spirio-sessions.jpg
+
+- name: NNFuze
+  start: 06/2021
+  url: /research/nnfuze/
+  description: >
+    This project focuses on memory and computational optimization of neural 
+    networks for use on embedded systems and addresses the question of how 
+    different neural networks can be replaced by or merged to create a single network. 
+  image: /images/projects/nnfuze.png
+
+- name: Voice Transformation
+  start: 06/2021
+  url: /research/voice-trafo/
+  description: >
+    The aim of this project is to improve the intelligibility and naturalness of the 
+    voices of laryngectomy patients based on whispered speech by leveraging the advances 
+    made in the field of generative models. 
+  image: /images/projects/voice-trafo.png
