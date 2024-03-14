@@ -41,7 +41,7 @@ permalink: /team/
         {% if member.project %}
         <p class="card-text"><i class="fa-solid fa-screwdriver-wrench"></i>
           {% for p in member.project %}
-          <a href="/research/{{ member.project }}/">{{ p }}</a>{% if forloop.last == false %}, {% endif %}
+          <a href="/research/{{ p }}/">{{ p }}</a>{% if forloop.last == false %}, {% endif %}
           {% endfor %}
         </p>
         {% endif %}
