@@ -3,8 +3,11 @@
   end: 12/2023
   url: /research/isaki/
   description: >
-    Anomaly detection in sensor data and nlp for event classification.
-  image: /images/projects/AdobeStock_574183420.jpeg
+    This project focuses on anomaly detection in critical infrastructures, 
+    such as water supply networks. By integrating various data sources, the system 
+    aims to improve situational awareness, enabling timely decision-making 
+    and resilience against various external threats.
+  image: /images/projects/isaki.jpeg
 
 - name: ENOM
   start: 4/2018
