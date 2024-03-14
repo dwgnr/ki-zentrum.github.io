@@ -3,8 +3,9 @@
   end: 6/2025
   url: /research/bess-ki/
   description: >
-    Automating preschool children speech and language assessment
-  image: /images/projects/AdobeStock_574183420.jpeg
+    The aim of this project is to support the BESS, a language assessment test 
+    for pre-school children, with methods of automatic speech and language processing.
+  image: /images/projects/bess-ki.jpg
 
 - name: Spirio Sessions
   start: 6/2020
