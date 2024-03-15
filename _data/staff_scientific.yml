@@ -40,7 +40,7 @@
   project: 
     - dementia
     - ttz
-  email: franziska.braunn@th-nuernberg.de
+  email: franziska.braun@th-nuernberg.de
 
 - name: Maximilian Bundscherer
   photo: bio-photo.jpg
@@ -73,7 +73,7 @@
   info: Research Scientist
   subject: topic segmentation
   project: hans
-  email: fabian.baumann@th-nuernberg.de
+  email: fabian.schneider@th-nuernberg.de
 
 - name: Philipp Seeberger
   photo: bio-photo-seeberger.jpg
@@ -99,7 +99,9 @@
   photo: bio-photo-wagner.jpg
   info: Research Scientist
   subject: speech recognition, gpu cluster admin
-  project: nnfuze
+  project: 
+    - nnfuze
+    - voice-trafo
   orcid: 0009-0006-7293-9131
   gscholar: 0ouufoAAAAAJ
   pgp: 8394C75E6AB52348141D913B6BC4768F9B6AEEC2

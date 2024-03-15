@@ -20,7 +20,8 @@ exclude:
   - Gemfile.lock
   - vendor
   - .ruby-version
-
+  - ~$diagram.drawio.bkp
+  - diagram.drawio
 
 
 # Conversion
