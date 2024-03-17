@@ -5,7 +5,89 @@ sitemap: false
 permalink: /cluster/user-guide/
 ---
 
-<img src="../../images/cluster/cluster-overview.svg">
+<img src="../../images/cluster/cluster-overview.svg" class="img-fluid" alt="HPC cluster overview">
+
+## Getting Started
+
+To gain access to the cluster, the first step is to apply for a user account. 
+Follow the steps outlined [here](../#apply-for-an-account) to request access. 
+
+The login is done via SSH using [Public-Key Authentication](https://en.wikipedia.org/wiki/Public-key_authentication). 
+Thus, an initial key pair (e.g., using `ssh-keygen`) needs to be generated. 
+A detailed guide on creating SSH key pairs can be found, for example, [here](https://www.heise.de/tipps-tricks/SSH-Key-erstellen-so-geht-s-4400280.html).
+
+Upload the **public key** (file extension `.pub`) in the "[Upload SSH Public Key](https://elearning.ohmportal.de/mod/assign/view.php?id=14861)" section of our Moodle course. 
+If you do not have access to our Moodle (e.g. external researchers), please contact our administrators via [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de) for further instructions. 
+
+Please provide the key in **OpenSSH format** (see notes [below](#notes-on-openssh-key-format) for further information).
+
+You will receive a notification via email once your user account has been created. 
+Please note that the account creation process may take some time. 
+In the meantime, you can familiarize yourself with this user guide and work on the tasks in the Moodle course. 
+
+**For THN students:** Please be aware that **full activation will only occur after all tasks in the Moodle course have been submitted and evaluated**.
+
+After creating the user account, you can connect to the cluster via **SSH**. 
+Login to the *Controlhost* can be done, for example, with `ssh <username>@<hostname>` or `ssh <username>@<ip_address>`. 
+The IP addresses and hostnames of our systems can be found in [Moodle](https://elearning.ohmportal.de/course/view.php?id=372). 
+
+Users who already have experience with HPC clusters can define jobs based on the template in the [Template section](#template) and execute them from the *Controlhost*. 
+For all others, it is recommended to first familiarize themselves with the cluster using this documentation.
+
+### Notes on OpenSSH Key Format
+
+The OpenSSH key format is typically used in Unix-based operating systems. 
+Public keys in OpenSSH format start as follows:
+
+```bash
+ssh-rsa AAAAB3...
+```
+
+Another commonly used format is SSH2. 
+This format is often the default format in SSH clients on Windows (e.g., [PuTTY](https://www.putty.org/)).
+
+Public keys in SSH2 format are structured as follows:
+
+```bash
+---- BEGIN SSH2 PUBLIC KEY ----
+Comment: "rsa-key-20220502"
+AAAAB3
+...
+---- END SSH2 PUBLIC KEY ----
+```
+
+To gain access to the servers of the THN-HPC cluster, **the key must be in OpenSSH format**. 
+Conversion from SSH2 to OpenSSH is possible, for example, using the `ssh-keygen` tool:
+
+```bash
+ssh-keygen -i -f ssh2.pub
+```
+
+### Troubleshooting SSH
+
+Usually, the problems occuring during connection attempts are due to key pairs with custom names (i.e. not automatically generated names) and/or are not stored in a directory checked by the SSH client. 
+
+Therefore, ensure that your SSH client uses the **correct key** to establish the connection and that your key pair is provided in the correct directory with the [correct permissions](https://superuser.com/questions/215504/permissions-on-private-key-in-ssh-folder).
+
+Hints about the directories where the client searches for keys or which keys are used for authentication are provided by the `-v` argument (e.g., `ssh -vvv <username>@<hostname>`).
+
+To ensure that the right key is used for the connection, you can also pass the private key as an argument to the command (`ssh -i /path/to/private_key <username>@<hostname>`). 
+Alternatively, connection parameters can be defined with a configuration file. 
+Configuration files are named `config` and can look like this:
+
+```bash
+# ~/.ssh/config
+
+Host kiz_cluster_controlhost
+  HostName <hostname_of_controlhost>
+  User <username>
+  IdentityFile ~/.ssh/<my-private-key>
+```
+
+#### Public Keys via Email
+
+In case you send your public key via email (e.g. because you don't have access to Moodle), please make sure that the file **does not contain line breaks, spaces, or any other formatting**. 
+Ideally, send the key as an attachment and do not copy it into the body of the email.
 
 ## Slurm Workload Manager
 
@@ -119,7 +201,7 @@ Jobs consist of so-called *Resource Requests* and *Job Steps*.
 *Resource Requests* specify the required number of CPUs/GPUs, the expected duration of the job, or the required memory. 
 *Job Steps* describe the tasks to be performed on the cluster, such as downloading files or executing a Python script. 
 
-<img src="../../images/cluster/slurm-directives.svg">
+<img src="../../images/cluster/slurm-directives.svg" class="img-fluid" alt="Slurm directives">
 
 The various kinds of resources on one or more compute nodes are controlled via different directives (see figure above). 
 
@@ -714,7 +796,7 @@ $ srun --qos=interactive \
     --container-image /nfs/scratch/students/$USER/mypytorch.sqsh hostname
 ```
 
-## Important Notes
+### Important Notes
 
 When using `--container-save`, make sure to allocate **sufficient RAM and computation time**. Larger images (more than 1GB) 
 often require **more than 15 minutes** to download and save. Accordingly, the `--time` parameter should be chosen generously.
@@ -731,7 +813,7 @@ In such cases, more memory should be provided to the job (e.g., via `--mem-per-c
 Due to the long loading times, we recommend executing jobs within larger containers as batch jobs. 
 Examples can be found in the [Container Templates](#container-templates) section. 
 
-## Jupyter in a Container Environment
+### Jupyter in a Container Environment
 
 Jupyter can also be used in a container provided by the **Pyxis** plugin, given Jupyter is installed in the respective bundle. 
 The following example demonstrates how to start Jupyter Lab in an Anaconda3 container runtime: 
@@ -752,7 +834,7 @@ There are several shared directories available on all nodes, i.e., files stored 
 These directories serve different purposes, which are briefly explained here:
 
 - `/home/$USER` or `$HOME`: In this directory, **20GB of storage space** is available per user.
-    - **Note:** The directory is mainly intended for source code, configuration files, and very small amounts of data. However, the **cache directory** (often `/home/$USER/.cache`) of many **package managers** (e.g., [PIP](https://pip.pypa.io/en/stable/)) is also located here by default. Please ensure that your storage quota is not reached due to a full cache directory. This can be done eitherb by making sure that cache directories are emptied on a regular basis or by moving these directories to another location. The cache directory of many package managers can be easily changed via environment variables. An example of this can be found in the [Job Template](#job-template) section.
+    - **Note:** The directory is mainly intended for source code, configuration files, and very small amounts of data. However, the **cache directory** (often `/home/$USER/.cache`) of many **package managers** (e.g., [PIP](https://pip.pypa.io/en/stable/)) is also located here by default. Please ensure that your storage quota is not reached due to a full cache directory. This can be done either by making sure that cache directories are emptied on a regular basis or by moving these directories to another location. The cache directory of many package managers can be easily changed via environment variables. An example of this can be found in the [Job Template](#job-template) section.
 - `/nfs/scratch/students/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
     - **Caution:** The directory does **not receive regular backups**. Therefore, important files should be regularly transferred to the student's own PC/laptop or to a Git repository.
 - `/nfs/data`: This directory contains various datasets (mainly speech corpora) that can be used, for example, for machine learning applications. The directory is read-only for all users. **Note:** Clarify with the supervisor of your project, whether the required data might already be available under `/nfs/data` before downloading it yourself. 
