@@ -25,7 +25,7 @@ You will receive a notification via email once your user account has been create
 Please note that the account creation process may take some time. 
 In the meantime, you can familiarize yourself with this user guide and work on the tasks in the Moodle course. 
 
-**For THN students:** Please be aware that **full activation will only occur after all tasks in the Moodle course have been submitted and evaluated**.
+**For THN students:** Please note that your account will only be activated after all tasks in the Moodle course have been submitted and evaluated.
 
 After creating the user account, you can connect to the cluster via **SSH**. 
 Login to the *Controlhost* can be done, for example, with `ssh <username>@<hostname>` or `ssh <username>@<ip_address>`. 
@@ -56,7 +56,7 @@ AAAAB3
 ---- END SSH2 PUBLIC KEY ----
 ```
 
-To gain access to the servers of the THN-HPC cluster, **the key must be in OpenSSH format**. 
+To gain access to the servers of the KIZ HPC cluster, **the key must be uploaded in OpenSSH format**. 
 Conversion from SSH2 to OpenSSH is possible, for example, using the `ssh-keygen` tool:
 
 ```bash
@@ -84,6 +84,10 @@ Host kiz_cluster_controlhost
   IdentityFile ~/.ssh/<my-private-key>
 ```
 
+Another common issue is the accidental use of the wrong username. 
+If you don't set the username explicitely in the SSH command (`ssh <username>@<hostname>`) or via the `~/.ssh/config`, the SSH client will use the username of your local PC, which is likely not the same as your username for the cluster. 
+Cluster usernames follow the THN standard scheme (e.g. *mustermannma12345* for students and *mustermannma* for staff).
+
 #### Public Keys via Email
 
 In case you send your public key via email (e.g. because you don't have access to Moodle), please make sure that the file **does not contain line breaks, spaces, or any other formatting**. 
@@ -109,7 +113,7 @@ The *Controlhost* is your login node and the place where you submit jobs to the 
 ## Available Resources
 
 The rough allocation of resources in Slurm is done using a so-called *Quality of Service* (QOS).
-Depending on the use case, certain resources are particularly demanded (e.g., plenty of memory for data preprocessing).
+Depending on the use case, certain types of resources are particularly needed (e.g., plenty of memory for data preprocessing).
 The different use cases can be covered by specifying the respective QOS in a Slurm job.
 
 Users can have access to the following resources on the cluster:
@@ -213,6 +217,8 @@ A comment introduced with `SBATCH` is interpreted by Slurm as a parameter descri
 A complete list of possible parameters can be found in the `sbatch` man page.
 
 The `SBATCH` directives must always be listed **at the beginning** of the *Submission* script. The only exception is the hashbang (e.g., `#!/bin/bash`) on the first line.
+
+A typical submission script is structured as follows: 
 
 ```bash
 #!/bin/bash
@@ -467,7 +473,7 @@ The initialization needs to be done manually before conda is used via `eval "$(c
 Using Jupyter Notebooks or Jupyter Lab sessions on the cluster is possible but requires some additional steps. 
 We acknowledge that Jupyter is widely used in the research community. 
 However, we do not recommend using it for long-running jobs on the cluster. 
-Expressing the workload as a batch job and running standard Python scripts may be the better option on the cluster (cf. Section [Batch Jobs](#batch-jobs)). 
+Expressing the workload as a batch job and running standard Python scripts may be the better option in most cases (cf. Section [Batch Jobs](#batch-jobs)). 
 Note that Jupyter Notebooks can be easily converted into plain Python scripts via `jupyter nbconvert --to script [YOUR_NOTEBOOK].ipynb`. 
 
 The notebook and its associated programming environment (e.g., Python3) are executed on the host system (i.e., a compute node in the cluster). 
@@ -915,7 +921,7 @@ A detailed description of how to use the extension can be found [here](https://c
 ### JetBrains IDEs 
 
 Several JetBrains IDEs also offer remote development capabilities. 
-For more information, check their website: https://www.jetbrains.com/remote-development/
+For more information, check their [website](https://www.jetbrains.com/remote-development/).
 
 Of course, the same rules that apply for VSCode also apply to those IDEs. 
 

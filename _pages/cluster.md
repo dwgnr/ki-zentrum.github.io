@@ -10,15 +10,18 @@ permalink: /cluster/
 Our cluster is tailored to efficiently running Jobs on Nvidia GPUs. 
 We do not offer extremely large numbers of CPU cores or extremely large amounts of main memory (RAM). 
 
-All nodes within the cluster utilize Linux operating systems, running in text-mode only. 
-Hence, a fundamental understanding of tasks such as file handling, scripting, editing, and similar operations is necessary.
+All nodes within the cluster utilize Unix-based operating systems, running in text-mode only. 
+Hence, a fundamental understanding of tasks such as file handling, scripting, editing, and similar operations in the Unix shell is necessary.
 
 ## Apply for an Account
 
 Cluster accounts are managed through our [Moodle course](https://elearning.ohmportal.de/course/view.php?id=372). 
 Depending on the type of user, there are different steps that need to be taken:
 
-- **For THN students:** You need access to our [Moodle course](https://elearning.ohmportal.de/course/view.php?id=372), complete the exercises and upload your SSH key there. First, get in touch with your thesis/project advisor and assess the computational requirements you are going to need for your thesis or project. Note that not all projects are necessarily well suited for our GPU cluster. Finally, request access to the Moodle course via e-mail to [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). Your account will be activated once you completed all exercises and uploaded your SSH key. 
+- **For THN students:** You need access to our [Moodle course](https://elearning.ohmportal.de/course/view.php?id=372), complete the exercises and upload your SSH key there. First, get in touch with your thesis/project advisor and assess the computational requirements you are going to need for your thesis or project. Note that not all projects are necessarily well suited for our GPU cluster. Finally, request access to the Moodle course via email to [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). Your account will be activated once you completed all exercises and uploaded your SSH key. 
+    - Your email should include the following information: 
+        - Name of your thesis/project advisor
+        - Type of your project (e.g. bachelor's thesis)
 - **For THN staff members:** Contact our cluster administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de) to request access to our [Moodle course](https://elearning.ohmportal.de/course/view.php?id=372) and upload your SSH key. 
 - **For all others:** Contact our cluster administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). 
 
@@ -30,12 +33,13 @@ Our detailed user guide can be found [here](user-guide).
 
 ### Connecting to the Cluster
 
-Once your account is activated, you can establish an SSH connection to the login node of the cluster. 
+Once your account is activated, you can establish an SSH connection to the Controlhost of the cluster. 
 
 ```bash
 ssh <username>@<hostname>
 ```
-Usernames follow the THN standard scheme (e.g. mustermannma12345).
+Usernames follow the THN standard scheme (e.g. mustermannma12345). 
+Information about the `<hostname>` of the Controlhost can be found in the [Moodle course](https://elearning.ohmportal.de/course/view.php?id=372). 
 
 We highly recommend using tools like [Mosh](https://mosh.org) and [tmux](https://wiki.ubuntuusers.de/tmux/) 
 to prevent issues with connection interruptions and to keep sessions alive even after logout.
@@ -62,11 +66,12 @@ These are some of the more important storage locations:
 
 ### Transferring Data
 
-On Linux and Mac machines, `scp` and `rsync` are the recommended methods for transferring data to and from a remote machine.
+On Linux and Mac machines, `scp` and `rsync` are the recommended methods for transferring data to and from a remote host.
 
 On Windows, users can utilize the Linux subsystem, use `scp` via PowerShell, or employ additional tools like [WinSCP](https://winscp.net/eng/index.php).
 
-Alternatively, users can also mount remote file systems locally on their machines (refer to the section on [file synchronization](user-guide/#file-synchronization) in the user guide).
+Alternatively, users can also mount remote file systems locally on their machines. 
+Refer to the section on [File Synchronization](user-guide/#file-synchronization) in the User Guide for more details.
 
 For handling large volumes of data, we recommend using `scp` or `rsync` due to their typically faster transfer speeds compared to other protocols. 
 Moreover, `rsync` offers additional functionalities that can expedite file transfers, such as skipping existing files or resuming interrupted transfers.
@@ -74,20 +79,20 @@ Moreover, `rsync` offers additional functionalities that can expedite file trans
 ### Creating Jobs
 
 - Jobs consist of two components:
-    1. **Resource Requests**: Define, (among other tings) the required number of CPUs/GPUs, the expected duration of the job, or the required memory.
+    1. **Resource Requests**: Define the required number of CPUs/GPUs, the expected duration of the job, the required memory etc..
     2. **Job Steps**: Define the tasks to be performed (e.g., downloading files and then executing a script).
 
 - There are two primary ways to create jobs:
-    1. **Batch Jobs**:
-        - Requires the creation of a *submission script* with `SBATCH` directives to parameterize the job.
-    2. **Interactive Jobs**:
-        - Reservation of resources for interactive use of compute nodes.
+    1. **Batch Jobs**: Requires the creation of a *submission script* with `SBATCH` directives to parameterize the job.
+    2. **Interactive Jobs**: Reserve resources for interactive use of compute nodes.
 
 #### Batch Jobs
 
-- The job is defined using a *submission script*.
+- The job is defined using a *submission script* that is started with `sbatch submission_script.sh`
 - `SBATCH` directives must always be **at the beginning** of the script.
     - The only exception: *Hashbang* (e.g., `#!/bin/bash`) on the first line.
+
+This an example of a typical submission script for the KIZ HPC cluster: 
 
 ```bash
 #!/bin/bash
@@ -132,6 +137,7 @@ srun --qos=interactive \
 
 ### Retrieve Information
 
+These are some frequently used commands to obtain information about the cluster or your jobs:
 ```bash
 # Overview and status for all partitions
 sinfo
@@ -155,15 +161,14 @@ sacctmgr show assoc user=$USER format=user,qos%50
 ## Good Practices
 
 - Monitor the results and behavior of your jobs on a regular basis to prevent wasting resources.
-- Manually terminate unnecessary jobs instead of relying on them to be killed when reaching the time limit.
-- Optimize performance by running short test jobs before committing resources to longer tasks.
-    - You can use the `seff <jobid>` command to get a quick overview of your resource efficiency. 
+- Manually terminate unnecessary jobs instead of waiting until the time limit is reached.
+- Optimize performance by running short test jobs before committing resources to longer tasks. We recommend using the `seff <jobid>` command on completed jobs to get a quick overview of your resource efficiency. 
 - When using GPUs, make sure each GPU is properly utilized (a simple way to check is via the `nvidia-smi` command). 
 - Minimize I/O operations on slow file systems like NFS. 
 - Remember that this is a multi-user environment. Blocking resources without using them affects your colleagues and fellow students. 
 - Before reaching out for assistance, read the [FAQs](#faqs) and [User Guide](user-guide) carefully. Many common problems are already discussed there. 
 - In case you still need assistance, contact our administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). 
-    - Note that we are a small team and can not provide comprehensive first-level support on topcis that are not directly related to the cluster (e.g. your program throws some generic exception). 
+    - Note that we are a small team and can not provide comprehensive first-level support on topics that are not directly related to the cluster (e.g. your program throws some generic exception). 
 
 ## FAQs
 
@@ -182,10 +187,9 @@ sacctmgr show assoc user=$USER format=user,qos%50
     - Refer to the [Troubleshooting SSH section](user-guide/#troubleshooting-ssh) of our User Guide for common connection problems. 
 - **I am connected to eduroam and can't access the cluster.**
     - Please connect to the THN VPN.
-    - Accessing the cluster from eduroam through the VPN tunnel may seem a bit counterintuitive, but it's currently the only option due to the way the routing is set up internally. 
+    - Accessing the cluster from eduroam through a VPN tunnel may seem a bit counterintuitive, but it's currently the only option due to the way the routing is set up internally. 
 - **I wish to access an application running on a cluster node via port forwarding.**
-    - Certain applications hosted on cluster nodes offer web-based interfaces (e.g. Jupyter Notebooks).
-    - Direct access to these applications from your local browser requires port forwarding.
+    - Certain applications hosted on cluster nodes offer web-based interfaces (e.g. Jupyter Notebooks). Direct access to these applications from your local browser requires port forwarding. 
     - Refer to the [Using Jupyter section](user-guide/#using-jupyter) in our User Guide for a step-by-step example.
 
 ### Slurm
@@ -203,11 +207,11 @@ sacctmgr show assoc user=$USER format=user,qos%50
     - Using Slurm ensures a fair resource allocation across all cluster users. 
     - Note that we reserve the right to deactivate user accounts in case of violation. 
 - **I have reached the maximum timelimit but my model training hasn't finished yet.**
-    - Make sure to save your training states regularly (i.e., checkpointing). 
+    - Make sure to save your training states regularly (i.e., checkpointing) and load the most recent state when you start a new job. 
     - See the [Model section](user-guide/#saving-and-loading-machine-learning-models) of our User Guide for more information. 
 - **The start of my Enroot container takes a very long time.**
-    - This is expected for larger images (>1GB) due to the way the unpacking and caching procedures done by Enroot. Be patient.  
-    - See the [Important Notes](user-guide/#important-notes) in the Container section of our User Guide for more information. 
+    - This is expected for larger images (>1GB) due to the way the unpacking and caching procedures done by Enroot. 
+    - Refer to the [Important Notes](user-guide/#important-notes) in the Container section of our User Guide for more information. 
 - **My process was killed by the cgroup out-of-memory (OOM) handler.**
     - If you receive a message like `slurmstepd: error: Detected 47 oom-kill event(s) in StepId=1317540.batch. Some of your processes may have been killed by the cgroup out-of-memory handler.` in your logs, then the allocated main memory (`--mem`) was not sufficient for the job step to complete. 
     - To solve this problem, you can allocate more memory to the job, check for memory leaks in your code and fix them or try making your program more memory-efficient. 
@@ -216,10 +220,9 @@ sacctmgr show assoc user=$USER format=user,qos%50
 
 - **I have a large dataset that may be of use to others, and I would like to store it in a location accessible to everyone (e.g. `/nfs/data`).**
     - Send an email to [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). We will copy the data to for you.  
-- **I received that message `Disk quota exceeded`.**
+- **I received the message `Disk quota exceeded`.**
     - You have reached the maximum amount of space you are allowed to occupy on the file system.
-    - Try deleting older data or storing your data on a different file system.
-    - You can check your quota status with the `quota -s` command.
+    - Try deleting older data or storing your data on a different file system. You can check your quota status with the `quota -s` command to determine whether you are below the limit or not.
     - You can request a quota increase via email to [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). 
         - The email should contain the following: 
             - A reason why you need more disk space. 
