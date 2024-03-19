@@ -12,12 +12,12 @@ permalink: /team/
 ## Research Staff
 
 {% for member in site.data.staff_scientific %}
-<div class="card mb-3 w-75">
+<div class="card mb-3 w-100">
   <div class="row g-0">
-    <div class="col-md-4">
-      <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start" alt="...">
+    <div class="col-md-3">
+      <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="...">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-9">
       <div class="card-body">
         <h5 class="card-title">
           {{ member.name }}
@@ -62,12 +62,12 @@ permalink: /team/
 ## Administrative Support
 
 {% for member in site.data.staff_admin %}
-<div class="card mb-3 w-75">
+<div class="card mb-3 w-100">
   <div class="row g-0">
-    <div class="col-md-4">
-      <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start" alt="...">
+    <div class="col-md-3">
+      <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="...">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-9">
       <div class="card-body">
         <h5 class="card-title">{{ member.name }}</h5>
         <p class="card-text">
@@ -93,12 +93,12 @@ permalink: /team/
 ## Alumni
 
 {% for member in site.data.alumni %}
-<div class="card mb-3 w-75">
+<div class="card mb-3 w-100">
   <div class="row g-0">
-    <div class="col-md-4">
-      <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start" alt="...">
+    <div class="col-md-3">
+      <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="...">
     </div>
-    <div class="col-md-8">
+    <div class="col-md-9">
       <div class="card-body">
         <h5 class="card-title">
           {{ member.name }}
