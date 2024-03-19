@@ -118,15 +118,86 @@ The different use cases can be covered by specifying the respective QOS in a Slu
 
 Users can have access to the following resources on the cluster:
 
-| **QOS**     | **Jobs per User**  | **Wall Duration per Job**    | **CPU** | **Memory** | **GPU** | **Comment**                                                |
-| ----------- | ------------------ | ---------------------------- | ------- | ---------- | ---- | ----------------------------------                            |
-| interactive | 2                  | 8 hours                      | 8       | 24GB       |  1  | Specifically for interactive jobs                              |
-| basic       | 10                 | 16 hours                     | 16      | 48GB       |  1  | Default QOS for students                                       | 
-| advanced    | 20                 | 24 hours                     | 24      | 64GB       |  1  | Default QOS for staff members (*upon request* for others)      | 
-| ultimate    | 50                 | 48 hours                     | 32      | 128GB      |  1  | *upon request*                                                 | 
-| bigmem      | 10                 | 12 hours                     | 16      | 256GB      |  -  | For jobs that require a lot of main memory; *upon request*     |
-| gpubasic    | 10                 | 96 hours                     | 16      | 24GB       |  1  | For long-running GPU jobs; *upon request*                      |
-| gpuultimate | 10                 | 48 hours                     | 32      | 128GB      |  4  | For jobs that are not feasible on a single GPU; *upon request* | 
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-bordered">
+    <thead>
+      <tr>
+        <th><strong>QOS</strong></th>
+        <th><strong>Jobs per User</strong></th>
+        <th><strong>Wall Duration per Job</strong></th>
+        <th><strong>CPU</strong></th>
+        <th><strong>Memory</strong></th>
+        <th><strong>GPU</strong></th>
+        <th><strong>Comment</strong></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>interactive</td>
+        <td>2</td>
+        <td>8 hours</td>
+        <td>8</td>
+        <td>24GB</td>
+        <td>1</td>
+        <td>Specifically for interactive jobs</td>
+      </tr>
+      <tr>
+        <td>basic</td>
+        <td>10</td>
+        <td>16 hours</td>
+        <td>16</td>
+        <td>48GB</td>
+        <td>1</td>
+        <td>Default QOS for students</td>
+      </tr>
+      <tr>
+        <td>advanced</td>
+        <td>20</td>
+        <td>24 hours</td>
+        <td>24</td>
+        <td>64GB</td>
+        <td>1</td>
+        <td>Default QOS for staff members (<em>upon request</em> for others)</td>
+      </tr>
+      <tr>
+        <td>ultimate</td>
+        <td>50</td>
+        <td>48 hours</td>
+        <td>32</td>
+        <td>128GB</td>
+        <td>1</td>
+        <td><em>upon request</em></td>
+      </tr>
+      <tr>
+        <td>bigmem</td>
+        <td>10</td>
+        <td>12 hours</td>
+        <td>16</td>
+        <td>256GB</td>
+        <td>-</td>
+        <td>For jobs that require a lot of main memory; <em>upon request</em></td>
+      </tr>
+      <tr>
+        <td>gpubasic</td>
+        <td>10</td>
+        <td>96 hours</td>
+        <td>16</td>
+        <td>24GB</td>
+        <td>1</td>
+        <td>For long-running GPU jobs; <em>upon request</em></td>
+      </tr>
+      <tr>
+        <td>gpuultimate</td>
+        <td>10</td>
+        <td>48 hours</td>
+        <td>32</td>
+        <td>128GB</td>
+        <td>4</td>
+        <td>For jobs that are not feasible on a single GPU; <em>upon request</em></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 The values in the table represent **maximum values** available within the respective Quality of Service. 
 They do not necessarily need to be fully utilized. 

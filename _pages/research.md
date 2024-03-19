@@ -11,7 +11,7 @@ permalink: /research/
 <div class="card mb-3">
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="{{p.image}}" class="img-fluid rounded-start">
+      <img src="{{p.image}}" class="img-fluid rounded-start h-100 object-fit-cover">
   	</div>
    	<div class="col-md-8">
       <div class="card-body">
@@ -31,7 +31,7 @@ permalink: /research/
 <div class="card mb-3">
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="{{p.image}}" class="img-fluid rounded-start">
+      <img src="{{p.image}}" class="img-fluid rounded-start h-100 object-fit-cover">
     </div>
     <div class="col-md-8">
       <div class="card-body">
