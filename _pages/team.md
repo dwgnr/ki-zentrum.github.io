@@ -14,7 +14,7 @@ permalink: /team/
 {% for member in site.data.staff_scientific %}
 <div class="card mb-3 w-100">
   <div class="row g-0">
-    <div class="col-md-3">
+    <div class="col-md-3 d-flex">
       <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="...">
     </div>
     <div class="col-md-9">
@@ -64,7 +64,7 @@ permalink: /team/
 {% for member in site.data.staff_admin %}
 <div class="card mb-3 w-100">
   <div class="row g-0">
-    <div class="col-md-3">
+    <div class="col-md-3 d-flex">
       <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="...">
     </div>
     <div class="col-md-9">
@@ -95,7 +95,7 @@ permalink: /team/
 {% for member in site.data.alumni %}
 <div class="card mb-3 w-100">
   <div class="row g-0">
-    <div class="col-md-3">
+    <div class="col-md-3 d-flex">
       <img src="/images/team/{{ member.photo }}" class="img-fluid rounded-start w-100 h-100 object-fit-cover" alt="...">
     </div>
     <div class="col-md-9">
