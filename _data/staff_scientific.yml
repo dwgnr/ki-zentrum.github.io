@@ -52,11 +52,12 @@
   email: maximilian.bundscherer@th-nuernberg.de
 
 - name: Thomas Ranzenberger
-  photo: bio-photo.jpg
+  photo: bio-photo-ranzenberger.jpg
   info: Research Scientist
   subject: speech recognition, mlops
   project: hans
   email: thomas.ranzenberger@th-nuernberg.de
+  gscholar: cf2w7JEAAAAJ
 
 - name: Thomas Schmitt
   photo: bio-photo.jpg
