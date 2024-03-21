@@ -37,15 +37,15 @@
   photo: bio-photo.jpg
   info: Research Scientist
   subject: dementia classification
-  project: 
-    - dementia
+  project:	
     - ttz
+    - dementia
   email: franziska.braun@th-nuernberg.de
 
 - name: Maximilian Bundscherer
-  photo: bio-photo.jpg
+  photo: bio-photo-bundscherer.jpg
   info: Research Scientist
-  subject: remote sensing
+  subject: radio sensing
   project:
     - ttz
     - radios
@@ -60,13 +60,13 @@
   gscholar: cf2w7JEAAAAJ
 
 - name: Thomas Schmitt
-  photo: bio-photo.jpg
+  photo: bio-photo-schmitt.jpg
   info: Research Scientist
   subject: computer vision
   project:
     - ttz
-    - saegen
-    - semmeln
+    - holz
+    - semmel
   email: thomas.schmitt@th-nuernberg.de
 
 - name: Fabian Schneider
@@ -81,8 +81,8 @@
   info: Research Scientist
   subject: natural language processing
   project:
-    - isaki
     - ttz
+    - isaki
     - fitness
   orcid: 0009-0003-3161-5120
   gscholar: uCE4Gz4AAAAJ

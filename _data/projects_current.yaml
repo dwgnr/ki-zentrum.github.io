@@ -36,3 +36,19 @@
     voices of laryngectomy patients based on whispered speech by leveraging the advances 
     made in the field of generative models. 
   image: /images/projects/voice-trafo.png
+
+- name: Semmeldetector
+  start: 06/2022
+  url: /research/semmel/
+  description: >
+    The aim of the Semmeldetector is to increase resource efficiency in 
+    commercial bakeries by automatically tracking unsold products using computer vision models.
+  image: /images/projects/semmel.jpg
+
+- name: Detection of Wood Rot using Machine Learning
+  start: 06/2022
+  url: /research/holz/
+  description: >
+    The aim of this project is to reduce the workload in sawmills by automatically 
+    detecting wood rot on the cross-section of wooden logs using computer vision models.
+  image: /images/projects/holz.jpg
