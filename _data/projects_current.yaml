@@ -46,9 +46,17 @@
   image: /images/projects/semmel.jpg
 
 - name: Detection of Wood Rot using Machine Learning
-  start: 06/2022
+  start: 01/2023
   url: /research/holz/
   description: >
     The aim of this project is to reduce the workload in sawmills by automatically 
     detecting wood rot on the cross-section of wooden logs using computer vision models.
   image: /images/projects/holz.jpg
+
+- name: Spectrum Sensing
+  start: 01/2024
+  url: /research/radio/
+  description: >
+    This research project focuses on the development of an automatic classification 
+    system for radio transmissions based on software defined radio (SDR) and machine learning.
+  image: /images/projects/radio.png

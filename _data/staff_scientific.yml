@@ -48,7 +48,7 @@
   subject: radio sensing
   project:
     - ttz
-    - radios
+    - radio
   email: maximilian.bundscherer@th-nuernberg.de
 
 - name: Thomas Ranzenberger
