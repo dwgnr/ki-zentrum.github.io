@@ -60,3 +60,13 @@
     of an interdisciplinary project funded by LEONARDO - Center for 
     Creativity and Innovation.
   image: /images/projects/spirio-sessions.jpg
+
+- name: Dementia Detection
+  start: 7/2021
+  url: /research/dementia/
+  description: >
+    This project has two main goals: the investigation of (deep) speech markers 
+    in machine learning for the assessment of dementia and the automatic speech-based 
+    evaluation and digitization of cognitive tests.
+  image: /images/projects/dementia.jpg
+
