@@ -47,6 +47,7 @@ kramdown:
 
 scholar:
   source: _data
+  bibliography: references*.bib
   style: custom #elsevier-harvard
   sort_by: year, month
   order: descending
