@@ -5,7 +5,6 @@
   orcid: 0009-0008-7780-8821
   gscholar: yMCzBy0AAAAJ
 
-
 - name: Korbinian Riedhammer
   photo: bio-photo-riedhammer.jpg
   info: Professor
@@ -29,14 +28,14 @@
 - name: Ilja Baumann
   photo: bio-photo-baumann.jpg
   info: Research Scientist
-  subject: children speech
+  subject: speech processing
   project: bess-ki
   email: ilja.baumann@th-nuernberg.de
 
 - name: Franziska Braun
   photo: bio-photo-braun.jpg
   info: Research Scientist
-  subject: dementia classification
+  subject: speech processing
   project:	
     - ttz
     - dementia
@@ -50,6 +49,28 @@
     - ttz
     - radio
   email: maximilian.bundscherer@th-nuernberg.de
+
+- name: Natalie Engert
+  photo: bio-photo.jpg
+  info: Research Scientist
+  subject: speech processing
+  email: natalie.engert@th-nuernberg.de
+
+- name: Steffen Freisinger
+  photo: bio-photo.jpg
+  info: Research Scientist
+  subject: natural language processing
+  project:
+    - ttz
+  email: steffen.freisinger@th-nuernberg.de
+
+- name: Kashaf Gulzar
+  photo: bio-photo.jpg
+  info: Research Scientist
+  subject: speech processing
+  project:
+    - dementia
+  email: kashaf.gulzar@th-nuernberg.de
 
 - name: Thomas Ranzenberger
   photo: bio-photo-ranzenberger.jpg
@@ -68,13 +89,6 @@
     - holz
     - semmel
   email: thomas.schmitt@th-nuernberg.de
-
-- name: Fabian Schneider
-  photo: bio-photo.jpg
-  info: Research Scientist
-  subject: topic segmentation
-  project: hans
-  email: fabian.schneider@th-nuernberg.de
 
 - name: Philipp Seeberger
   photo: bio-photo-seeberger.jpg
