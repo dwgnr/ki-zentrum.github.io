@@ -101,7 +101,11 @@ permalink: /team/
     <div class="col-md-9">
       <div class="card-body">
         <h5 class="card-title">
+          {% if member.link %}
+          <a target="_blank" href="{{ member.link }}">{{ member.name }}</a>
+          {% else %}
           {{ member.name }}
+          {% endif %}
           {% if member.twitter %}
           <a href="https://twitter.com/{{member.twitter}}"><i class="fa-brands fa-twitter"></i></a>
           {% endif %}
