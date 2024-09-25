@@ -30,3 +30,14 @@ body {
   text-decoration: none;
   font-weight: bold;
 }
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(30deg);
+  color: red;
+  opacity: 0.36;
+  font-size: 40px;
+  font-weight: bold;
+} 
