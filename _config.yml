@@ -54,3 +54,5 @@ scholar:
   group_by: year, type
   group_order: descending
   bibliography_template: bibliography
+  type_names:
+    patent: Patents
