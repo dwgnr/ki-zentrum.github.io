@@ -12,7 +12,6 @@ Interested in working at our lab?
 Interested in doing a master's degree at our lab, focusing on cutting-edge speech research?
 The [Master of Applied Research (M-APR)](https://www.th-nuernberg.de/einrichtungen-gesamt/in-institute/institut-fuer-leistungselektronische-systeme-elsys/studium/forschungsmaster/) is a research-focused degree program.
 At its core are two consecutive research projects (10 ECTS each) followed by a research thesis (30 ECTS).
-We offer a 
 
 
 ## Research Thesis
