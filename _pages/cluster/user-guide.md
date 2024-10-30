@@ -125,9 +125,9 @@ Users can have access to the following resources on the cluster:
         <th><strong>QOS</strong></th>
         <th><strong>Jobs per User</strong></th>
         <th><strong>Wall Duration per Job</strong></th>
-        <th><strong>CPU</strong></th>
+        <th><strong>CPUs</strong></th>
         <th><strong>Memory</strong></th>
-        <th><strong>GPU</strong></th>
+        <th><strong>GPUs</strong></th>
         <th><strong>Comment</strong></th>
       </tr>
     </thead>
