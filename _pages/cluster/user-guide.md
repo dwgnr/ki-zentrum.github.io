@@ -134,19 +134,19 @@ Users can have access to the following resources on the cluster:
     <tbody>
       <tr>
         <td>interactive</td>
-        <td>2</td>
+        <td>5</td>
         <td>8 hours</td>
-        <td>8</td>
-        <td>24GB</td>
+        <td>16</td>
+        <td>128GB</td>
         <td>1</td>
-        <td>Specifically for interactive jobs</td>
+        <td>Specifically for interactive sessions</td>
       </tr>
       <tr>
         <td>basic</td>
         <td>10</td>
         <td>16 hours</td>
         <td>16</td>
-        <td>48GB</td>
+        <td>128GB</td>
         <td>1</td>
         <td>Default QOS for students</td>
       </tr>
@@ -154,8 +154,8 @@ Users can have access to the following resources on the cluster:
         <td>advanced</td>
         <td>20</td>
         <td>24 hours</td>
-        <td>24</td>
-        <td>64GB</td>
+        <td>16</td>
+        <td>256GB</td>
         <td>1</td>
         <td>Default QOS for staff members (<em>upon request</em> for others)</td>
       </tr>
@@ -163,8 +163,8 @@ Users can have access to the following resources on the cluster:
         <td>ultimate</td>
         <td>50</td>
         <td>48 hours</td>
-        <td>32</td>
-        <td>128GB</td>
+        <td>16</td>
+        <td>256GB</td>
         <td>1</td>
         <td><em>upon request</em></td>
       </tr>
@@ -173,7 +173,7 @@ Users can have access to the following resources on the cluster:
         <td>10</td>
         <td>12 hours</td>
         <td>16</td>
-        <td>256GB</td>
+        <td>1TB</td>
         <td>-</td>
         <td>For jobs that require a lot of main memory; <em>upon request</em></td>
       </tr>
@@ -182,7 +182,7 @@ Users can have access to the following resources on the cluster:
         <td>10</td>
         <td>96 hours</td>
         <td>16</td>
-        <td>24GB</td>
+        <td>256GB</td>
         <td>1</td>
         <td>For long-running GPU jobs; <em>upon request</em></td>
       </tr>
@@ -190,8 +190,8 @@ Users can have access to the following resources on the cluster:
         <td>gpuultimate</td>
         <td>10</td>
         <td>48 hours</td>
-        <td>32</td>
-        <td>128GB</td>
+        <td>64</td>
+        <td>768GB</td>
         <td>4</td>
         <td>For jobs that are not feasible on a single GPU; <em>upon request</em></td>
       </tr>
@@ -201,7 +201,7 @@ Users can have access to the following resources on the cluster:
 
 The values in the table represent **maximum values** available within the respective Quality of Service. 
 They do not necessarily need to be fully utilized. 
-In fact, we encourage users **not to allocate all of the available resources** simply because it's possible, to minimize their own wait time and to give other users a chance to receive faster job allocation.  
+In fact, we encourage users not to allocate all of the available resources simply because it's possible, to minimize their own wait time and to give other users a chance to receive faster job allocation.  
 
 Information on granular resource control can be found, for example, in the section [Creating Jobs](#creating-jobs).
 
