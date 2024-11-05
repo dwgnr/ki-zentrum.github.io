@@ -1045,7 +1045,7 @@ watch nvidia-smi
 # 2. (h)top-like reporting:
 nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv -l 1
 
-# 3. More detailed outout:
+# 3. More detailed output:
 nvidia-smi --query-gpu=pci.bus_id,timestamp,pstate,temperature.gpu,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 1
 ```
 
