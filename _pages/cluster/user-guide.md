@@ -400,7 +400,8 @@ Once the Slurm job is running and the resources have been allocated, the program
 All subsequent commands that you enter are then executed considering the allocated resources.
 This continues until `exit` is called or a time limit is reached.
 
-**Important Notes :** 
+**Important Notes:** 
+
 - Interactive jobs with `srun` or `salloc` can only be executed by explicitely setting the **Quality of Service** with `--qos=interactive` (unless when used within a submission script).
 - Interactive jobs are not intended for long-running computations that consume a large amount of resources. Instead, they are meant for quick explorations, installations (e.g. setting up virtual environments) or testing your code on the compute node. 
 
