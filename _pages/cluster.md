@@ -115,15 +115,16 @@ cat /etc/*rel*
 Interactive jobs are used to create shell sessions on a compute node, allowing users to freely navigate on the node.
 
 ```bash
-# Start an interactive Bash session on the default partition:
+# Start an interactive shell session on the default partition with default resource allocations:
+salloc --qos=interactive
+# Alternative way to start an interactive shell session:
 srun --qos=interactive --pty bash -i
-# srun accepts the same arguments as sbatch
-srun --qos=interactive \
+# salloc and srun accept the same arguments as sbatch
+salloc --qos=interactive \
     --partition=p0 \
     --mem-per-cpu=1G \
     --cpus-per-task=2 \
-    --time=00:10:00 \
-    --pty bash -i
+    --time=00:10:00
 ```
 
 **Important note:** Interactive jobs can only be started in the QOS `--qos=interactive`. Hence, you always need to pass this argument explicitly.
@@ -244,6 +245,8 @@ sacctmgr show assoc user=$USER format=user,qos%50
     - If you are using PyTorch or TensorFlow, you may have chosen a CPU-only installation. 
         - See the official installation procedures of [PyTorch](https://pytorch.org/get-started/locally/) and [TensorFlow](https://www.tensorflow.org/install/pip) for the correct way of installing with GPU support.
     - In other cases, CUDA or CUDA-related libraries may be missing on the host. Ensure you have the required module(s) loaded in the correct version (e.g. CUDA, cuDNN, etc.).
-- **I received an error message like `RuntimeError: CUDA Out of memory`.**
-    - The error indicates that your allocated GPU does not have enough memory (VRAM) to execute the current task.
-    - One of the most common causes of the `CUDA out of memory` error is using a batch size that's too large. Try reducing your batch size and see if that helps. 
+    - For information regarding GPU usage monitoring please refer to our [User Guide](user-guide/#working-with-nvidia-gpus). 
+- **I received an error message similar to `RuntimeError: CUDA Out of memory`.**
+    - The error indicates that your allocated GPU does not have enough main memory to execute the current task.
+    - Common causes of the `CUDA out of memory` error are the use of too large batch sizes or loading the model in full precision (`float32`), even though it is intended to be executed in half precision (`fp16`). Try reducing your batch size and/or converting your model/data to lower precision data types. 
+    - For information regarding GPU usage monitoring please refer to our [User Guide](user-guide/#working-with-nvidia-gpus).
