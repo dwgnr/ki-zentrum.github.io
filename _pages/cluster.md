@@ -164,8 +164,8 @@ sacctmgr show assoc user=$USER format=user,qos%50
 - Monitor the results and behavior of your jobs on a regular basis to prevent wasting resources.
 - Manually terminate unnecessary jobs instead of waiting until the time limit is reached.
 - Optimize performance by running short test jobs before committing resources to longer tasks. We recommend using the `seff <jobid>` command on completed jobs to get a quick overview of your resource efficiency. 
-- When using GPUs, make sure each GPU is properly utilized (a simple way to check is via the `nvidia-smi` command). 
-- Minimize I/O operations on slow file systems like NFS. 
+- When using GPUs, make sure each GPU is properly utilized (a simple way to check is via the `nvidia-smi` command). Additional information can be found in the [Working with NVIDIA GPUs Section](user-guide/#working-with-nvidia-gpus) of our User Guide. 
+- Minimize I/O operations on slow file systems like NFS and try copying your data to fast node-local SSDs instead. 
 - Remember that this is a multi-user environment. Blocking resources without using them affects your colleagues and fellow students. 
 - Before reaching out for assistance, read the [FAQs](#faqs) and [User Guide](user-guide) carefully. Many common problems are already discussed there. 
 - In case you still need assistance, contact our administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). 
