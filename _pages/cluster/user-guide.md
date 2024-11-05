@@ -374,7 +374,13 @@ srun my_script2
 
 ### Interactive Jobs
 
-An interactive Bash session is created with the following command:
+Interactive jobs can be requested by using `salloc` or `srun` with the `--qos=interactive` QOS option: 
+
+```bash
+salloc --qos=interactive
+```
+
+or alternatively with: 
 
 ```bash
 srun --qos=interactive --pty bash -i
@@ -382,24 +388,31 @@ srun --qos=interactive --pty bash -i
 
 Once the Slurm job starts, a Bash prompt is spawned for your user on the assigned compute node.
 The `-i` argument specifies that Bash should be started as an interactive shell.
-This means Bash reads the `~/.bashrc` file upon start and executes the commands contained within it.
-For more precise specification of required resources, `srun` accepts similar arguments to `sbatch`.
-For example, the following command allocates an interactive session with 2 CPUs for 10 minutes:
+
+The environment from the requesting shell (including loaded modules), will be inherited by the interactive job. This means Bash reads the `~/.bashrc` file upon start and executes the commands contained within it.
+
+For more precise specification of required resources, `srun` and `sbatch` accept the same arguments as `sbatch`. For example, the following command allocates an interactive session with 2 CPUs for 10 minutes:
 
 ```bash
 srun --qos=interactive --cpus-per-task=2 --time=10:00 --pty bash -i
 ```
-
-Additional flexibility is offered by the `salloc` command.
-`salloc` accepts the same parameters for requesting resources as `sbatch`.
-Once Slurm has allocated the resources requested via `salloc`, `srun` can be used just like in a regular batch submission script.
-Once the Slurm job is running, the program returns to the shell.
+Once the Slurm job is running and the resources have been allocated, the program returns to the shell.
 All subsequent commands that you enter are then executed considering the allocated resources.
 This continues until `exit` is called or a time limit is reached.
 
-**Important:** Interactive jobs with `srun` or `salloc` can only be executed by specifically setting the **Quality of Service** with `--qos=interactive` (unless when used within a submission script).
-Interactive jobs are not intended for long-running computations that consume a large amount of resources.
-Instead, they are meant for quick explorations, installations (e.g. setting up virtual environments) or testing your code on the compute node. 
+**Important Notes :** 
+- Interactive jobs with `srun` or `salloc` can only be executed by explicitely setting the **Quality of Service** with `--qos=interactive` (unless when used within a submission script).
+- Interactive jobs are not intended for long-running computations that consume a large amount of resources. Instead, they are meant for quick explorations, installations (e.g. setting up virtual environments) or testing your code on the compute node. 
+
+### Attach to a Running Job
+
+Use the following command on the login node to attach to one of your running jobs:
+
+```bash
+srun --jobid=<your_job_id> --overlap --pty /bin/bash -l
+```
+
+Attaching to a running job can be used e.g. to check GPU utilization via `nvidia-smi` or `nvtop`. 
 
 ## Environment Modules
 
@@ -995,6 +1008,150 @@ Several JetBrains IDEs also offer remote development capabilities.
 For more information, check their [website](https://www.jetbrains.com/remote-development/).
 
 Of course, the same rules that apply for VSCode also apply to those IDEs. 
+
+## Working with NVIDIA GPUs
+
+### CUDA Compilers and Libraries
+
+Each compute node has a standard set of [CUDA compilers and runtime libraries](https://developer.nvidia.com/cuda-toolkit) installed. Additionally, we offer several alternative versions of CUDA and corresponding libraries like [cuDNN](https://developer.nvidia.com/cudnn) and [CUTLASS](https://github.com/NVIDIA/cutlass) via [Environment Modules](#environment-modules):
+
+```bash
+# module avail
+--------------------------------------------------------------------------------------------------------------- /usr/local/Modules/modulefiles ----------------------------------------------------------------------------------------------------------------
+cmake/cmake-3.26.4  cuda/cuda-11.8.0   cudnn/cudnn-8.2.4.15-11.4  dot             git/git-2.42.0             jdk/openjdk-17.0.8.1_1    module-git   neovim/0.9.4    null               python/anaconda3  use.own
+cuda/11             cuda/cuda-12.3     cudnn/cudnn-8.7.0.84-11.8  gcc/gcc-10.5.0  jdk/openjdk-1.8.0_265-b01  llvm/llvm-17.0.4          module-info  nodejs/18.12.1  nvtop/nvtop-3.0.1  ripgrep/13.0.0
+cuda/cuda-11.4.4    cuda/cuda-memtest  cutlass/2.9.1              gcc/gcc-12.3.0  jdk/openjdk-11.0.20.1_1    mkl/intel-mkl-2020.4.304  modules      npm/9.3.1       openmpi            rust/1.70.0
+```
+
+
+Loading the respective module, e.g. `module load cuda/cuda-12.3`, adjusts the typical environment variables and also sets `CUDA_HOME`, which can be used in your projects e.g. with `make` and `cmake`.
+
+
+### NVIDIA System Management Interface (`nvidia-smi`)
+
+`nvidia-smi` ([NVIDIA System Management Interface](https://developer.nvidia.com/system-management-interface)), is a command line utility built on top of the [NVIDIA Management Library (NVML)](https://developer.nvidia.com/management-library-nvml) that shows **GPU utilization** and processes currently using the GPU. 
+The `nvidia-smi` utility is available on all compute nodes.
+
+
+**Hint:** A common usage pattern is to first [attach to a running job](#attach-to-a-running-job), and then check the job's GPU utilization by running the `nvidia-smi` command.
+
+`nvidia-smi` also be used to continuously report GPU usage information:
+
+```bash
+# 1. With the watch command:
+watch nvidia-smi
+
+# 2. (h)top-like reporting:
+nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv -l 1
+
+# 3. More detailed outout:
+nvidia-smi --query-gpu=pci.bus_id,timestamp,pstate,temperature.gpu,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 1
+```
+
+### `nvtop` GPU Monitor
+
+[NVTOP](https://github.com/Syllo/nvtop) is a (h)top like task monitor for GPUs and accelerators that can be used as an alternative to `nvidia-smi`. NVTOP shows GPU details like allocated memory, utilization, temperature, etc. as well as information about the processes executing on the GPUs. 
+
+`nvtop` is available as an [Environment Module](#environment-modules) on all compute nodes.
+
+**Hint:** A common usage pattern is to load the module (`module load nvtop`), [attach to a running job](#attach-to-a-running-job), and then check the job's GPU utilization by running the `nvtop` command.
+
+
+### GPU-Profiling 
+
+The two primary profiling tools offered as part of the CUDA toolkit are:
+
+1. `nsys`: [Nsight Systems](https://developer.nvidia.com/nsight-systems) for system-wide performance analysis.
+2. `ncu`: [Nsight Compute](https://developer.nvidia.com/nsight-compute) for performance analysis of individual kernels (i.e., functions that run on the GPU). 
+
+#### Nsight Systems (`nsys`)
+
+An overview of application behavior can be obtained by running:
+
+```bash
+nsys profile -o my_report.out my_executable
+```
+
+`my_executable` can be any executable program including Python scripts. 
+After profiling your application on the cluster, you can transfer the report file (`my_report.out`) to your local machine and open it with a local installation of the Nsight Systems application for analysis.
+
+More command line options can be found in the [`nsys` documentation](https://docs.nvidia.com/nsight-systems/) or via the command line tool itself (e.g. `nsys --help profile`). 
+
+Note that applications compiled with `nvcc` should pass the `-lineinfo` (`--generate-line-info`) flag to include source-level profile information.
+
+#### Nsight Compute (`ncu`)
+
+Nsight Compute allows for an in-depth performance analysis on kernel-level.  
+
+A performance profile of all kernels in your application can be obtained via: 
+```bash
+ncu -o my_report.out my_executable
+```
+`my_executable` can be any executable program including Python scripts and `my_report.out` is the output file for writing the profiling results. 
+
+The command can be refined with arguments such as: 
+
+- `--kernel-name my_kernel`: Set the kernel name (`my_kernel`) for an exact match or a regular expression via `regex:<expression>` to use for matching the kernel name.
+- `--metrics gpu__time_duration.sum,dram__bytes_read.sum,dram__bytes_write.sum`: Limit the metrics that are computed during the profiling run. In this example, only the time spent to run the kernel, as well as the amount of data read and written from and to the GPU's high-bandwidth memory (HBM). 
+
+Further information on available metrics can be found in the [Profiling Guide section of the documentation](https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#metrics-structure).  
+More command line arguments can be found in the [`ncu` documentation](https://docs.nvidia.com/nsight-compute/) or via the command line tool itself (e.g. `ncu --help`). 
+
+**Hint:** PyTorch users can enable and disable specific sections in their code for profiling via the CUDA runtime API:
+
+```python
+torch.cuda.cudart().cudaProfilerStart()
+# Code to be profiled...
+torch.cuda.cudart().cudaProfilerStop()
+```
+
+### Debugging 
+
+The `cuda-gdb` tool is NVIDIA's debugger for CUDA applications, which enables debugging of CUDA kernels as well as standard C/C++ code. 
+
+Debugging the application `my_executable` looks as follows:
+
+```shell
+cuda-gdb --args my_executable
+
+(cuda-gdb) set cuda break_on_launch application
+(cuda-gdb) run
+```
+
+`set cuda break_on_launch application` sets a breakpoint on the CUDA kernel's launch, i.e., when the application launches a kernel, `cuda-gdb` will pause execution automatically. The `run` command starts or resumes the execution of the target application (`my_executable`) in the debugger.
+
+#### Functional Correctness (Memcheck)
+
+Compute Sanitizer is a functional correctness checking suite included in the CUDA toolkit. It contains multiple tools to perform various types of correctness checks. Particularly important is the `memcheck` tool, which can detect and attribute out of bounds and misaligned memory access errors in CUDA applications. 
+
+Compute Sanitizer is executed as follows: 
+
+```shell
+compute-sanitizer my_executable
+```
+
+A typical output that involves illegal memory access could look like this:
+```shell
+========= Invalid __global__ read of size 2 bytes
+=========     at division_kernel(c10::Half *, c10::Half *, c10::Half *, c10::Half *, c10::Half *, int, int, int, int)+0x4a0
+=========     by thread (0,0,0) in block (687,0,0)
+=========     Address 0x7fdc7b40015e is out of bounds
+=========     and is 351 bytes after the nearest allocation at 0x7fdc7b200000 of size 2097152 bytes
+=========     Saved host backtrace up to driver entry point at kernel launch time
+=========     Host Frame: [0x3344e0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x1498c]
+=========                in /data/user/wagnerdo/speculative-decoding/venv/lib/python3.9/site-packages/torch/lib/../../nvidia/cuda_runtime/lib/libcudart.so.12
+=========     Host Frame:cudaLaunchKernel [0x6bedb]
+=========                in /data/user/wagnerdo/speculative-decoding/venv/lib/python3.9/site-packages/torch/lib/../../nvidia/cuda_runtime/lib/libcudart.so.12
+=========     Host Frame:__device_stub__Z15division_kernelPN3c104HalfES1_S1_S1_S1_iiii(c10::Half*, c10::Half*, c10::Half*, c10::Half*, c10::Half*, int, int, int, int) in /tmp/tmpxft_001c5df6_00000000-6_speculative_hf_half_reorg.cudafe1.stub.c:14 [0x79b34]
+=========                in /home/wagnerdo/.cache/torch_extensions/py39_cu121/custom_sampling/custom_sampling.so
+=========     Host Frame:sampling_cuda(at::Tensor, at::Tensor, int, at::Tensor, bool, int) in /data/user/wagnerdo/speculative-decoding/speculative_hf_half_reorg.cu:143 [0x7a178]
+=========                in /home/wagnerdo/.cache/torch_extensions/py39_cu121/custom_sampling/custom_sampling.so
+=========     Host Frame:std::enable_if<!std::is_member_pointer<std::decay<std::tuple<at::Tensor, int> (* const&)(at::Tensor, at::Tensor, int, at::Tensor, bool, int)>::type>::value, std::invoke_result<std::tuple<at::Tensor, int> (* const&)(at::Tensor, at::Tensor, int, at::Tensor, bool, int), at::Tensor, at::Tensor, int, at::Tensor, bool, int>::type>::type c10::guts::invoke<std::tuple<at::Tensor, int> (* const&)(at::Tensor, at::Tensor, int, at::Tensor, bool, int), at::Tensor, at::Tensor, int, at::Tensor, bool, int>(std::tuple<at::Tensor, int> (* const&)(at::Tensor, at::Tensor, int, at::Tensor, bool, int), at::Tensor&&, at::Tensor&&, int&&, at::Tensor&&, bool&&, int&&) [0x6092b]
+=========                in /home/wagnerdo/.cache/torch_extensions/py39_cu121/custom_sampling/custom_sampling.so
+```
+
 
 ## Helpful Commands
 
