@@ -929,7 +929,7 @@ These directories serve different purposes, which are briefly explained here:
 - `/nfs/scratch/students/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
     - **Caution:** The directory does **not receive regular backups**. Therefore, important files should be regularly transferred to the student's own PC/laptop or to a Git repository.
 - `/nfs/data`: This directory contains various datasets (mainly speech corpora) that can be used, for example, for machine learning applications. The directory is read-only for all users. **Note:** Clarify with the supervisor of your project, whether the required data might already be available under `/nfs/data` before downloading it yourself. 
-- `/net/ml[0-2]`: These paths allow network access to the local SSD hard drives of the individual compute nodes. The default quota on these disks is **100GB**. They are not intended for permanent storage and should only be used for jobs that require lots of I/O and therefore not faster access to storage. The idea is to first copy your data onto the SSD (e.g. via `rsync`), execute your job and then delete the data once your job is finished.  
+- `/net/ml[0-N]`: These paths allow network access to the local SSD hard drives of the individual compute nodes. The default quota on these disks is **100GB**. They are not intended for permanent storage and should only be used for jobs that require lots of I/O and therefore not faster access to storage. The idea is to first copy your data onto the SSD (e.g. via `rsync`), execute your job and then delete the data once your job is finished.  
 - `/nfs/tools`: This directory contains some tools such as the Kaldi Toolkit (see [Kaldi](#using-the-kaldi-asr-toolkit) section) that can be used within the cluster. 
 
 ## Saving and Loading Machine Learning Models
@@ -1045,7 +1045,7 @@ watch nvidia-smi
 # 2. (h)top-like reporting:
 nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv -l 1
 
-# 3. More detailed outout:
+# 3. More detailed output:
 nvidia-smi --query-gpu=pci.bus_id,timestamp,pstate,temperature.gpu,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 1
 ```
 
