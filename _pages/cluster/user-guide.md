@@ -302,7 +302,7 @@ A typical submission script is structured as follows:
 #
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --time=10:00
+#SBATCH --time=00:10:00
 #SBATCH --cpus-per-task=2
 #SBATCH --gres=gpu:1
 #SBATCH --mem-per-cpu=500MB
@@ -313,13 +313,14 @@ srun cat /etc/*rel*
 
 Assuming the *submission* script is named `my_batchjob.sh`, it is submitted to Slurm and executed as a batch job via the command `sbatch my_batchjob.sh`.
 
-The above script reserves two CPUs, one GPU, and 500MB of RAM per allocated CPU (i.e., 1GB in total) for 10 minutes.
+The above script reserves two CPUs, one GPU, and 500MB of RAM per allocated CPU (i.e., 1GB in total) for 10 minutes (format `HH:MM:SS`). 
 Within this batch job, two *job steps* are to be executed.
 In the first step, the hostname of the compute node (`srun hostname`) is printed.
-In the second step prints information about the Linux distribution of the compute node.
+In the second step prints information about the Linux distribution installed on the compute node.
 
 The outputs are stored in the file `test-%j.out`, where `%j` represents the job ID.
-Any errors that occur during execution are saved in `test-%j.err`.
+Any errors that occur during execution are saved in `test-%j.err`. 
+Other placeholder patterns besides `%j` are available to create output filenames. Please refer to the [Slurm documentation](https://slurm.schedmd.com/sbatch.html#SECTION_FILENAME-PATTERN) for a list of available patterns. 
 
 Sending emails is possible via the `--mail-user` parameter.
 The type of notification is configured with `--mail-type`.
@@ -327,7 +328,62 @@ Common notification types include `ALL`, `BEGIN`, `END`, `FAIL`, and `REQUEUE`.
 A complete list of notification types can be found in the [documentation](https://slurm.schedmd.com/sbatch.html).
 Of course, the mail parameters can simply be omitted if you do not wish to receive email notifications.
 The status email at the end of a job (notification type `END`) includes information about the consumed resources and the duration of the job (similar to the `seff <jobid>` command).
-This overview can, for example, be used effectively for optimizing further executions of the same or similar jobs.
+This overview can, for example, be used effectively for optimizing further executions of the same or similar jobs. 
+
+#### Allocating Resources
+
+As shown in the figure above, resource allocation is a combination of several interrelated parameters. Some resource requirements can be tied directly to the number of tasks (`--ntasks`) or nodes (`--nodes`), while others apply globally or per specific components (like CPUs or GPUs). Below is an explanation of how Slurm handles various resources and their interactions:
+
+- `--ntasks`:
+  - Specifies the total number of tasks to run across all nodes, i.e., the total number of individual processes to run. 
+  - Affects how resources like memory and CPUs are distributed if tied to `--ntasks`.
+- `--ntasks-per-node`:
+  - Specifies how many tasks (individual processes) should run on each node.
+  - Affects how resources like memory and CPUs are distributed if tied to `--ntasks-per-node`.
+- `--array=<start>-<end>%<max_running>`:
+  - The `--array` option is used to submit job arrays, which allow you to submit multiple similar jobs with different indices. These indices can then be used to parametrize your jobs. 
+  - `<start>` and `<end>`: Define the range of job indices. 
+  - `%<max_running>`: (Optional) Limits the maximum number of jobs running simultaneously in the array.
+- `--nodes`:
+  - Specifies the number of compute nodes to use for the job.
+- `--cpus-per-task`:
+  - Specifies the number of CPUs allocated to each task.
+  - Total CPUs allocated = `--ntasks` × `--cpus-per-task`.
+  - Tied to `--ntasks` and `--ntasks-per-node`, as each task is assigned the specified number of CPUs.
+- `--mem`:
+  - Specifies the total memory per node for the job.
+  - Not tied to `--ntasks` or `--ntasks-per-node`, but is tied to `--nodes` since memory is allocated per node.
+  - Relation to `--array`: Each job in the array gets the amount of memory defined with `--mem`. 
+- `--mem-per-cpu`:
+  - Specifies memory allocated per CPU.
+  - Total memory = `--mem-per-cpu` × Total CPUs (determined by `--ntasks`, `--ntasks-per-node` and `--cpus-per-task`).
+  - Tied to `--ntasks`, `--ntasks-per-node` and `--cpus-per-task`. 
+- `--gres` (e.g., `--gres=gpu:<num_gpus>`):
+  - Specifies the number of generic resources (like GPUs) per node.
+  - Not tied to `--ntasks`, ``--ntasks-per-node`` or `--cpus-per-task`.
+  - Relation to `--array`: Each job in the array gets the number of GPUs defined with `--gres=gpu:<num_gpus>`. 
+- `--mem-per-gpu`:
+  - Specifies memory allocated per GPU.
+  - Total memory = `--mem-per-gpu` × Total GPUs (determined by `--gres=gpu:<num_gpus>`).
+  - Tied to `--gres=gpu:<num_gpus>` but not to `--ntasks`, `--ntasks-per-node` or `--cpus-per-task`. 
+
+#### Defining GPU Jobs 
+
+As mentioned in the previous section, the usage of `--gres=gpu:<num_gpus>` or `--gres=gpu:<gpu_type>:<num_gpus>` is independent of the `--ntasks` and `--ntasks-per-node` directives. 
+When you use `--gres=gpu:<num_gpus>`, you are specifying the total number of GPUs you want to allocate **per node** rather than per task. This means, an allocation of `--gres=gpu:1` reserves one GPU for the entire job or job step on that node.
+
+**In most cases** you may want to set `--ntasks=1` and `<num_gpus>` to the desired total number of GPUs. Deep learning frameworks like [PyTorch](https://pytorch.org/tutorials/beginner/dist_overview.html) or wrappers like [Accelerate](https://huggingface.co/docs/accelerate/index) handle multi-GPU setups on their own, i.e., these frameworks only need to *"see"* the correct number of GPUs on the node to spawn subprocesses accordingly. 
+
+If you still want to control the number of GPUs per task specifically, you would combine `--gres` with `--ntasks-per-node` or `--ntasks` depending on how you're setting up tasks across the nodes. Here's an example configuration for specifying GPUs per task:
+
+```bash
+#SBATCH --gres=gpu:1            # Total number of GPUs per node
+#SBATCH --ntasks=2              # Total number of tasks
+```
+
+With this setup, you'll allocate 1 GPU, shared across 2 tasks on that node. If each task needs its own GPU, increase the value of `--gres=gpu:<num_gpus>` accordingly.
+
+**Note:** The `--mem-per-gpu` directive refers to the **main memory (RAM)** on the compute node and not the available High-Bandwidth Memory (HBM) on the GPU. By setting `--gres=gpu:<num_gpus>`, you will always have the full HBM (e.g. 40GB/80GB on an A100) at your disposal. 
 
 #### Job Template
 
@@ -573,11 +629,11 @@ Starting a Jupyter Notebook or Jupyter Lab session involves the following steps:
     - `<host_port>` can be any free port >1000
 - Use SSH port forwarding to map the port of the Jupyter instance to a local port:
     - In this case, a direct SSH connection with port forwarding from your own machine to the respective compute node is required:
-        - `[local_pc]$ ssh -N -L localhost:<local_port>:localhost:<host_port> <nodename>.informatik.fh-nuernberg.de`
+        - `[local_pc]$ ssh -N -L localhost:<local_port>:localhost:<host_port> <nodename>.in.ohmhs.de`
         - The `<nodename>` can be found, e.g. by running the `hostname` command in your interactive session.
     - `<local_port>` and `<host_port>` are the ports for Jupyter on your local PC and on the compute node, respectively.
     - The local port can be any free port on your own machine. However, it is probably easiest to assign the same port:
-        - `[local_pc]$ ssh -N -L localhost:<host_port>:localhost:<host_port> <nodename>.informatik.fh-nuernberg.de`
+        - `[local_pc]$ ssh -N -L localhost:<host_port>:localhost:<host_port> <nodename>.in.ohmhs.de`
 
 ## Using the Kaldi ASR Toolkit
 
