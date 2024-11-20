@@ -272,13 +272,69 @@ Alternatively, the `--help` argument can also be used (e.g., `sinfo --help`).
 
 ## Creating Jobs
 
-Jobs consist of so-called *Resource Requests* and *Job Steps*. 
-*Resource Requests* specify the required number of CPUs/GPUs, the expected duration of the job, or the required memory. 
-*Job Steps* describe the tasks to be performed on the cluster, such as downloading files or executing a Python script. 
+Jobs consist of so-called *Resource Requests* and *Job Steps*. *Resource Requests* specify the required number of CPUs/GPUs, the expected duration of the job, or the required memory. *Job Steps* describe the tasks to be performed on the cluster, such as downloading files or executing a Python script. 
 
 <img src="../../images/cluster/slurm-directives.svg" class="img-fluid" alt="Slurm directives">
 
 The various kinds of resources on one or more compute nodes are controlled via different directives (see figure above). 
+
+### Allocating Resources
+
+As shown in the figure above, resource allocation is a combination of several interrelated parameters. Some resource requirements can be tied directly to the number of tasks (`--ntasks`) or nodes (`--nodes`), while others apply globally or per specific components (like CPUs or GPUs). Below is an explanation of how Slurm handles various resources and their interactions:
+
+- `--ntasks`:
+  - Specifies the total number of tasks to run across all nodes, i.e., the total number of individual processes to run. 
+  - Affects how resources like memory and CPUs are distributed if tied to `--ntasks`.
+- `--ntasks-per-node`:
+  - Specifies how many tasks (individual processes) should run on each node.
+  - Affects how resources like memory and CPUs are distributed if tied to `--ntasks-per-node`.
+- `--array=<start>-<end>%<max_running>`:
+  - The `--array` option is used to submit job arrays, which allow you to submit multiple similar jobs with different indices. These indices can then be used to parametrize your jobs. 
+  - `<start>` and `<end>`: Define the range of job indices. 
+  - `%<max_running>`: (Optional) Limits the maximum number of jobs running simultaneously in the array.
+- `--nodes`:
+  - Specifies the number of compute nodes to use for the job.
+- `--cpus-per-task`:
+  - Specifies the number of CPUs allocated to each task.
+  - Total CPUs allocated = `--ntasks` × `--cpus-per-task`.
+  - Tied to `--ntasks` and `--ntasks-per-node`, as each task is assigned the specified number of CPUs.
+  - Relation to `--array`: CPUs are not shared between array jobs; they are allocated separately for each job in the array.
+- `--mem`:
+  - Specifies the total memory per node for the job.
+  - Not tied to `--ntasks` or `--ntasks-per-node`, but is tied to `--nodes` since memory is allocated per node.
+  - Relation to `--array`: Each job in the array gets the amount of memory defined with `--mem`. 
+- `--mem-per-cpu`:
+  - Specifies memory allocated per CPU.
+  - Total memory = `--mem-per-cpu` × Total CPUs (determined by `--ntasks`, `--ntasks-per-node` and `--cpus-per-task`).
+  - Tied to `--ntasks`, `--ntasks-per-node` and `--cpus-per-task`. 
+  - Relation to `--array`: Memory is allocated separately for each job in the array.
+- `--gres` (e.g., `--gres=gpu:<num_gpus>`):
+  - Specifies the number of generic resources (like GPUs) per node.
+  - Not tied to `--ntasks`, ``--ntasks-per-node`` or `--cpus-per-task`.
+  - Relation to `--array`: Each job in the array gets the number of GPUs defined with `--gres=gpu:<num_gpus>`. 
+- `--mem-per-gpu`:
+  - Specifies memory allocated per GPU.
+  - Total memory = `--mem-per-gpu` × Total GPUs (determined by `--gres=gpu:<num_gpus>`).
+  - Tied to `--gres=gpu:<num_gpus>` but not to `--ntasks`, `--ntasks-per-node` or `--cpus-per-task`. 
+  - Relation to `--array`: Memory is allocated separately for each job in the array.
+
+### Defining GPU Jobs 
+
+As mentioned in the previous section, the usage of `--gres=gpu:<num_gpus>` or `--gres=gpu:<gpu_type>:<num_gpus>` is independent of the `--ntasks` and `--ntasks-per-node` directives. 
+When you use `--gres=gpu:<num_gpus>`, you are specifying the total number of GPUs you want to allocate **per node** rather than per task. This means, an allocation of `--gres=gpu:1` reserves one GPU for the entire job or job step on that node.
+
+**In most cases** you may want to set `--ntasks=1` and `<num_gpus>` to the desired total number of GPUs. Deep learning frameworks like [PyTorch](https://pytorch.org/tutorials/beginner/dist_overview.html) or wrappers like [Accelerate](https://huggingface.co/docs/accelerate/index) handle multi-GPU setups on their own, i.e., these frameworks only need to *"see"* the correct number of GPUs on the node to spawn subprocesses accordingly. 
+
+If you still want to control the number of GPUs per task specifically, you would combine `--gres` with `--ntasks-per-node` or `--ntasks` depending on how you're setting up tasks across the nodes. Here's an example configuration for specifying GPUs per task:
+
+```bash
+#SBATCH --gres=gpu:1            # Total number of GPUs per node
+#SBATCH --ntasks=2              # Total number of tasks
+```
+
+With this setup, you'll allocate 1 GPU, shared across 2 tasks on that node. If each task needs its own GPU, increase the value of `--gres=gpu:<num_gpus>` accordingly.
+
+**Note:** The `--mem-per-gpu` directive refers to the **main memory (RAM)** on the compute node and not the available High-Bandwidth Memory (HBM) on the GPU. By setting `--gres=gpu:<num_gpus>`, you will always have the full HBM (e.g. 40GB/80GB on an A100) at your disposal. 
 
 ### Batch Jobs
 
@@ -329,61 +385,6 @@ A complete list of notification types can be found in the [documentation](https:
 Of course, the mail parameters can simply be omitted if you do not wish to receive email notifications.
 The status email at the end of a job (notification type `END`) includes information about the consumed resources and the duration of the job (similar to the `seff <jobid>` command).
 This overview can, for example, be used effectively for optimizing further executions of the same or similar jobs. 
-
-#### Allocating Resources
-
-As shown in the figure above, resource allocation is a combination of several interrelated parameters. Some resource requirements can be tied directly to the number of tasks (`--ntasks`) or nodes (`--nodes`), while others apply globally or per specific components (like CPUs or GPUs). Below is an explanation of how Slurm handles various resources and their interactions:
-
-- `--ntasks`:
-  - Specifies the total number of tasks to run across all nodes, i.e., the total number of individual processes to run. 
-  - Affects how resources like memory and CPUs are distributed if tied to `--ntasks`.
-- `--ntasks-per-node`:
-  - Specifies how many tasks (individual processes) should run on each node.
-  - Affects how resources like memory and CPUs are distributed if tied to `--ntasks-per-node`.
-- `--array=<start>-<end>%<max_running>`:
-  - The `--array` option is used to submit job arrays, which allow you to submit multiple similar jobs with different indices. These indices can then be used to parametrize your jobs. 
-  - `<start>` and `<end>`: Define the range of job indices. 
-  - `%<max_running>`: (Optional) Limits the maximum number of jobs running simultaneously in the array.
-- `--nodes`:
-  - Specifies the number of compute nodes to use for the job.
-- `--cpus-per-task`:
-  - Specifies the number of CPUs allocated to each task.
-  - Total CPUs allocated = `--ntasks` × `--cpus-per-task`.
-  - Tied to `--ntasks` and `--ntasks-per-node`, as each task is assigned the specified number of CPUs.
-- `--mem`:
-  - Specifies the total memory per node for the job.
-  - Not tied to `--ntasks` or `--ntasks-per-node`, but is tied to `--nodes` since memory is allocated per node.
-  - Relation to `--array`: Each job in the array gets the amount of memory defined with `--mem`. 
-- `--mem-per-cpu`:
-  - Specifies memory allocated per CPU.
-  - Total memory = `--mem-per-cpu` × Total CPUs (determined by `--ntasks`, `--ntasks-per-node` and `--cpus-per-task`).
-  - Tied to `--ntasks`, `--ntasks-per-node` and `--cpus-per-task`. 
-- `--gres` (e.g., `--gres=gpu:<num_gpus>`):
-  - Specifies the number of generic resources (like GPUs) per node.
-  - Not tied to `--ntasks`, ``--ntasks-per-node`` or `--cpus-per-task`.
-  - Relation to `--array`: Each job in the array gets the number of GPUs defined with `--gres=gpu:<num_gpus>`. 
-- `--mem-per-gpu`:
-  - Specifies memory allocated per GPU.
-  - Total memory = `--mem-per-gpu` × Total GPUs (determined by `--gres=gpu:<num_gpus>`).
-  - Tied to `--gres=gpu:<num_gpus>` but not to `--ntasks`, `--ntasks-per-node` or `--cpus-per-task`. 
-
-#### Defining GPU Jobs 
-
-As mentioned in the previous section, the usage of `--gres=gpu:<num_gpus>` or `--gres=gpu:<gpu_type>:<num_gpus>` is independent of the `--ntasks` and `--ntasks-per-node` directives. 
-When you use `--gres=gpu:<num_gpus>`, you are specifying the total number of GPUs you want to allocate **per node** rather than per task. This means, an allocation of `--gres=gpu:1` reserves one GPU for the entire job or job step on that node.
-
-**In most cases** you may want to set `--ntasks=1` and `<num_gpus>` to the desired total number of GPUs. Deep learning frameworks like [PyTorch](https://pytorch.org/tutorials/beginner/dist_overview.html) or wrappers like [Accelerate](https://huggingface.co/docs/accelerate/index) handle multi-GPU setups on their own, i.e., these frameworks only need to *"see"* the correct number of GPUs on the node to spawn subprocesses accordingly. 
-
-If you still want to control the number of GPUs per task specifically, you would combine `--gres` with `--ntasks-per-node` or `--ntasks` depending on how you're setting up tasks across the nodes. Here's an example configuration for specifying GPUs per task:
-
-```bash
-#SBATCH --gres=gpu:1            # Total number of GPUs per node
-#SBATCH --ntasks=2              # Total number of tasks
-```
-
-With this setup, you'll allocate 1 GPU, shared across 2 tasks on that node. If each task needs its own GPU, increase the value of `--gres=gpu:<num_gpus>` accordingly.
-
-**Note:** The `--mem-per-gpu` directive refers to the **main memory (RAM)** on the compute node and not the available High-Bandwidth Memory (HBM) on the GPU. By setting `--gres=gpu:<num_gpus>`, you will always have the full HBM (e.g. 40GB/80GB on an A100) at your disposal. 
 
 #### Job Template
 
@@ -452,6 +453,7 @@ For more precise specification of required resources, `srun` and `sbatch` accept
 ```bash
 srun --qos=interactive --cpus-per-task=2 --time=10:00 --pty bash -i
 ```
+
 Once the Slurm job is running and the resources have been allocated, the program returns to the shell.
 All subsequent commands that you enter are then executed considering the allocated resources.
 This continues until `exit` is called or a time limit is reached.
