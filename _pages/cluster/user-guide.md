@@ -1254,7 +1254,7 @@ This section lists some frequently used Slurm commands.
   - Information on creating the submission script can be found in the [Batch Jobs](#Batch-Jobs) section.
 - **Interactive Jobs**
   - `srun --qos=interactive --pty bash -i`
-  - `salloc --cpus-per-task=1 --mem-per-cpu=100MB`
+  - `salloc --qos=interactive`
 
 ### Job Administration
 
