@@ -202,7 +202,7 @@ sacctmgr show assoc user=$USER format=user,qos%50
     - For comprehensive guidance on Slurm, please refer to our [User Guide](user-guide/#slurm-workload-manager).
     - An example script for a batch job can be found [here](user-guide/#job-template). 
 - **How can I run an interactive job on the cluster?**
-    - Interactive jobs can be requested by using `srun` with the `--qos=interactive` argument. 
+    - Interactive jobs can be requested by using `srun` or `salloc` with the `--qos=interactive` argument. 
     - Interactive jobs are useful for testing or debugging your application.
     - More information on interactive jobs is available [here](user-guide/#interactive-jobs).
 - **I don't want to use Slurm for my work on the cluster.**
