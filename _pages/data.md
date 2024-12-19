@@ -20,7 +20,7 @@ The clips were labeled with six stuttering-related event types: blocks, prolonga
 The audio was recorded during therapy sessions at the Institut der Kasseler Stottertherapie.
 The data will be made available for research purposes upon request and after signing the respective data license.
 
-[KSoF](https://zenodo.org/records/6801844) {% cite bayerl2022ksof %}
+[KSoF](https://zenodo.org/records/6801844) {% cite bayerl2022ksof-data %}
 
 
 # Kassel State of Fluency - Challenge

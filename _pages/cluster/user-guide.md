@@ -195,6 +195,15 @@ Users can have access to the following resources on the cluster:
         <td>4</td>
         <td>For jobs that are not feasible on a single GPU; <em>upon request</em></td>
       </tr>
+      <tr>
+        <td>preemptible</td>
+        <td>unlimited</td>
+        <td>unlimited</td>
+        <td>unlimited</td>
+        <td>unlimited</td>
+        <td>unlimited</td>
+        <td>Unlimited but non-guaranteed resources</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -205,7 +214,22 @@ In fact, we encourage users not to allocate all of the available resources simpl
 
 Information on granular resource control can be found, for example, in the section [Creating Jobs](#creating-jobs).
 
-The use of a specific QOS is controlled using the argument `--qos=[qos_name]`.
+The use of a specific QOS is controlled using the argument `--qos=[qos_name]`. 
+
+The following default values have been set (i.e., if custom parameters are not explicitly set, these values apply):
+
+- 2 CPUs per compute node.
+- 2 CPUs per allocated GPU.
+- 1024 MB of memory per allocated CPU.
+
+### Preemptible Resource Tier
+
+Jobs submitted with `--qos=preemptible` are unlimited with respect to the resources they can consume. 
+However, preemptible jobs will be **requed** when jobs with a QoS from the guaranteed resource tier require resources blocked by a preemptible job.
+Preemptible jobs in turn cannot preempt any other jobs. 
+Currently, all QoS except `preemptible` are in the guaranteed resource tier, i.e., once the resources are available and allocated they are guaranteed for the lifetime of the job.  
+
+### Requesting Additional Resources
 
 QOS definitions marked with *upon request* in the comment column can be enabled when needed. 
 To do so, please contact our administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de), as soon as you can estimate the required resources.
@@ -214,12 +238,6 @@ The e-mail should contain the following:
 - A brief reason why you need the additional resources
 - For students: The name of your advisor and the title of your project 
 
-The following default values have been set (i.e., if custom parameters are not explicitly set, these values apply):
-
-- 2 CPUs per compute node.
-- 2 CPUs per allocated GPU.
-- 1024 MB of memory per allocated CPU.
-- Inactive jobs are automatically terminated after 600 seconds. This value only applies to `srun` and `salloc` and has no effect on batch jobs.
 
 ## Cluster Information
 
