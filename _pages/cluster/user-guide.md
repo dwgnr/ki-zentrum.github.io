@@ -214,7 +214,7 @@ In fact, we encourage users not to allocate all of the available resources simpl
 
 Information on granular resource control can be found, for example, in the section [Creating Jobs](#creating-jobs).
 
-The use of a specific QOS is controlled using the argument `--qos=[qos_name]`. 
+The use of a specific QOS is controlled using the argument `--qos=<qos_name>`. 
 
 The following default values have been set (i.e., if custom parameters are not explicitly set, these values apply):
 
@@ -225,16 +225,20 @@ The following default values have been set (i.e., if custom parameters are not e
 ### Preemptible Resource Tier
 
 Jobs submitted with `--qos=preemptible` are unlimited with respect to the resources they can consume. 
-However, preemptible jobs will be **requed** when jobs with a QoS from the guaranteed resource tier require resources blocked by a preemptible job.
+The only limit is the availability of resources on the node(s). 
+However, preemptible jobs will be **requed** when jobs with a QOS from the *guaranteed resource tier* require resources blocked by a preemptible job.
 Preemptible jobs in turn cannot preempt any other jobs. 
-Currently, all QoS except `preemptible` are in the guaranteed resource tier, i.e., once the resources are available and allocated they are guaranteed for the lifetime of the job.  
+All QOS except `preemptible` are in the guaranteed resource tier, i.e., once the resources are available and allocated they are guaranteed for the lifetime of the job.  
+
+**Hint:** The `--qos=preemptible` can also be used as a replacement for `--qos=interactive` to obtain unlimited resources in an [interactive job](#interactive-jobs). 
+
 
 ### Requesting Additional Resources
 
 QOS definitions marked with *upon request* in the comment column can be enabled when needed. 
 To do so, please contact our administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de), as soon as you can estimate the required resources.
 
-The e-mail should contain the following: 
+Your e-mail should contain the following: 
 - A brief reason why you need the additional resources
 - For students: The name of your advisor and the title of your project 
 
@@ -449,24 +453,32 @@ srun my_script2
 
 ### Interactive Jobs
 
-Interactive jobs can be requested by using `salloc` or `srun` with the `--qos=interactive` QOS option: 
+Interactive jobs can be requested by using `salloc` or `srun` with the `--qos=interactive` or `--qos=preemptible` QOS option: 
 
 ```bash
 salloc --qos=interactive
 ```
 
-or alternatively with: 
+or alternatively: 
 
 ```bash
 srun --qos=interactive --pty bash -i
 ```
 
-Once the Slurm job starts, a Bash prompt is spawned for your user on the assigned compute node.
-The `-i` argument specifies that Bash should be started as an interactive shell.
+Once the resources are available and allocated, a Bash prompt is spawned on the assigned compute node.
 
-The environment from the requesting shell (including loaded modules), will be inherited by the interactive job. This means Bash reads the `~/.bashrc` file upon start and executes the commands contained within it.
+When `salloc` is used to start an interactive session, the Slurm job is implicitely submitted with `--pty /bin/bash -l`. 
+This parameter is set automatically in the background and cannot be explicitely defined or overriden by the user. 
+The `-l` flag tells Bash to start as a login shell, which is necessary to read global configurations on the compute node, such as making [environment modules](#environment-modules) available to the user. 
 
-For more precise specification of required resources, `srun` and `sbatch` accept the same arguments as `sbatch`. For example, the following command allocates an interactive session with 2 CPUs for 10 minutes:
+With `srun` it is not necessary to read and initialize system-wide configurations. 
+Therefore, it is sufficient to start Bash as an interactive shell with the `-i` flag, which provides a minimal environment setup reading only user-specific configurations (e.g. `~/.bashrc`). 
+However, `srun` requires a command to be executed on the node. Therefore, `--pty bash -i` must be explicitely passed to `srun`. 
+
+With both `salloc` and `srun`, the environment from the requesting shell, including loaded environment modules, will be inherited by the interactive job. 
+
+For more precise specification of required resources, `srun` and `salloc` accept the same arguments as `sbatch`. 
+For example, the following command allocates an interactive session with 2 CPUs for 10 minutes:
 
 ```bash
 srun --qos=interactive --cpus-per-task=2 --time=10:00 --pty bash -i
