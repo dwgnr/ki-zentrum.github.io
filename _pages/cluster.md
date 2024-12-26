@@ -110,7 +110,11 @@ srun sleep 5s
 srun cat /etc/*rel*
 ```
 
-**Hint:** You can attach to a running job by executing `srun --jobid=<your_job_id> --overlap --pty /bin/bash -l` on the login node. This is particularly useful for monitoring GPU utilization via `nvidia-smi` or `nvtop`. 
+**Hint:** You can **attach to a running job** by executing 
+```bash
+srun --jobid=<your_job_id> --overlap --pty /bin/bash -l
+``` 
+on the login node. This is particularly useful for monitoring GPU utilization via `nvidia-smi` or `nvtop`. 
 
 #### Interactive Jobs
 
@@ -129,13 +133,14 @@ salloc --qos=interactive \
     --time=00:10:00
 ```
 
-**Important note:** Interactive jobs can only be started in the QOS `--qos=interactive`. Hence, you always need to pass this argument explicitly.
+**Important note:** Interactive jobs can only be started with the QOSs `--qos=interactive` (guaranteed resource tier) or the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument always has to be passed explicitely to `srun` or `salloc`. 
 
-#### Quality-of-Service
+#### Quality of Service
 
-- Resource allocation is managed via the so-called **Quality of Service** (QOS). 
-- Each QOS is tailored to a specific use case or user group. 
-- The use of a specific QOS is controlled with `--qos=qos_name`.
+- User-specific resource allocation is managed via the so-called **Quality of Service** (QOS). 
+- Each QOS is tailored to specific use cases or user groups. 
+- The use of a specific QOS is controlled with `--qos=<qos_name>`. 
+- All QOSs define resources that are guaranteed for the lifetime of the job, with `--qos=preemptible` being the only exception. 
 - More details about the available QOS can be found in the [User Guide](user-guide/#available-resources).
 
 ### Retrieve Information
