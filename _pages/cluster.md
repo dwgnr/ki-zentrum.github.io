@@ -133,7 +133,7 @@ salloc --qos=interactive \
     --time=00:10:00
 ```
 
-**Important note:** Interactive jobs can only be started with the QOSs `--qos=interactive` (guaranteed resource tier) or the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument always has to be passed explicitely to `srun` or `salloc`. 
+**Important Note:** Interactive jobs can only be started with the QOSs `--qos=interactive` (guaranteed resource tier) or the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument always has to be passed explicitely to `srun` or `salloc`. 
 
 #### Quality of Service
 
