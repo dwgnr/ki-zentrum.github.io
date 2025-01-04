@@ -418,14 +418,14 @@ Execution is done with `sbatch name_of_template.sh`.
 #SBATCH --job-name=job-template   # Short name of the job
 #SBATCH --nodes=1                 # Number of nodes needed
 #SBATCH --ntasks=1                # Total number of tasks across all nodes
-#SBATCH --partition=p0            # Partition used (e.g., p0, p1, p2, or all)
+#SBATCH --partition=p0            # Partition used (e.g., p0, p1, p2, p3, p4 or all)
 #SBATCH --time=08:00:00           # Total time limit for job runtime (Format: HH:MM:SS)
-#SBATCH --cpus-per-task=8         # CPU cores per task
+#SBATCH --cpus-per-task=8         # Number of CPUs per task
 #SBATCH --mem=16G                 # Total main memory per node
 #SBATCH --gres=gpu:1              # Total number of GPUs per node
-#SBATCH --qos=basic               # Quality-of-Service
+#SBATCH --qos=basic               # A valid Quality-of-Service available to the user
 #SBATCH --mail-type=ALL           # Type of mail sending (valid values include ALL, BEGIN, END, FAIL, or REQUEUE)
-#SBATCH --mail-user=<USERNAME>@th-nuernberg.de # Email address for status mails (Please replace <USERNAME> with valid username)
+#SBATCH --mail-user=<USERNAME>@th-nuernberg.de # Email address for status mails (Please enter your e-mail address here)
 
 echo "=================================================================="
 echo "Starting Batch Job at $(date)"
@@ -437,7 +437,7 @@ echo "=================================================================="
 
 ###################### Optional for Python users #######################
 # The following environment variables ensure that
-# model weights from Huggingface and PIP packages do not land under
+# model weights from Huggingface and PIP packages are not placed in
 # /home/$USER/.cache.
 CACHE_DIR=/nfs/scratch/students/$USER/.cache
 export PIP_CACHE_DIR=$CACHE_DIR
@@ -445,7 +445,7 @@ export HF_HOME=$CACHE_DIR
 mkdir -p CACHE_DIR
 ########################################################
 
-############### Define your own job here ################
+########## Define your own workload here ###############
 srun my_script1
 srun my_script2
 ########################################################

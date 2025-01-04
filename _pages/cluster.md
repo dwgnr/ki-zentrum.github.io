@@ -7,7 +7,7 @@ permalink: /cluster/
 
 ## The Cluster 
 
-Our cluster is tailored to efficiently running Jobs on Nvidia GPUs. 
+Our cluster is tailored to efficiently running Jobs on NVIDIA GPUs. 
 We do not offer extremely large numbers of CPU cores or extremely large amounts of main memory (RAM). 
 
 All nodes within the cluster utilize Unix-based operating systems, running in text-mode only. 
