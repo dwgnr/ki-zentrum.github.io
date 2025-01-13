@@ -7,7 +7,7 @@ permalink: /cluster/
 
 ## The Cluster 
 
-Our cluster is tailored to efficiently running Jobs on Nvidia GPUs. 
+Our cluster is tailored to efficiently running Jobs on NVIDIA GPUs. 
 We do not offer extremely large numbers of CPU cores or extremely large amounts of main memory (RAM). 
 
 All nodes within the cluster utilize Unix-based operating systems, running in text-mode only. 
@@ -133,7 +133,7 @@ salloc --qos=interactive \
     --time=00:10:00
 ```
 
-**Important note:** Interactive jobs can only be started with the QOSs `--qos=interactive` (guaranteed resource tier) or the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument always has to be passed explicitely to `srun` or `salloc`. 
+**Important Note:** Interactive jobs can only be started with the QOSs `--qos=interactive` (guaranteed resource tier) or the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument always has to be passed explicitely to `srun` or `salloc`. 
 
 #### Quality of Service
 

@@ -418,14 +418,14 @@ Execution is done with `sbatch name_of_template.sh`.
 #SBATCH --job-name=job-template   # Short name of the job
 #SBATCH --nodes=1                 # Number of nodes needed
 #SBATCH --ntasks=1                # Total number of tasks across all nodes
-#SBATCH --partition=p0            # Partition used (e.g., p0, p1, p2, or all)
+#SBATCH --partition=p0            # Partition used (e.g., p0, p1, p2, p3, p4 or all)
 #SBATCH --time=08:00:00           # Total time limit for job runtime (Format: HH:MM:SS)
-#SBATCH --cpus-per-task=8         # CPU cores per task
+#SBATCH --cpus-per-task=8         # Number of CPUs per task
 #SBATCH --mem=16G                 # Total main memory per node
 #SBATCH --gres=gpu:1              # Total number of GPUs per node
-#SBATCH --qos=basic               # Quality-of-Service
+#SBATCH --qos=basic               # A valid Quality-of-Service available to the user
 #SBATCH --mail-type=ALL           # Type of mail sending (valid values include ALL, BEGIN, END, FAIL, or REQUEUE)
-#SBATCH --mail-user=<USERNAME>@th-nuernberg.de # Email address for status mails (Please replace <USERNAME> with valid username)
+#SBATCH --mail-user=<USERNAME>@th-nuernberg.de # Email address for status mails (Please enter your e-mail address here)
 
 echo "=================================================================="
 echo "Starting Batch Job at $(date)"
@@ -437,7 +437,7 @@ echo "=================================================================="
 
 ###################### Optional for Python users #######################
 # The following environment variables ensure that
-# model weights from Huggingface and PIP packages do not land under
+# model weights from Huggingface and PIP packages are not placed in
 # /home/$USER/.cache.
 CACHE_DIR=/nfs/scratch/students/$USER/.cache
 export PIP_CACHE_DIR=$CACHE_DIR
@@ -445,7 +445,7 @@ export HF_HOME=$CACHE_DIR
 mkdir -p CACHE_DIR
 ########################################################
 
-############### Define your own job here ################
+########## Define your own workload here ###############
 srun my_script1
 srun my_script2
 ########################################################
@@ -490,8 +490,8 @@ This continues until `exit` is called or a time limit is reached.
 
 **Important Notes:** 
 
-- Interactive jobs with `srun` or `salloc` can only be executed by explicitely setting the **Quality of Service** with `--qos=interactive` (unless when used within a submission script).
-- Interactive jobs are not intended for long-running computations that consume a large amount of resources. Instead, they are meant for quick explorations, installations (e.g. setting up virtual environments) or testing your code on the compute node. 
+- Interactive jobs with `srun` or `salloc`, unless when used within a submission script, can only be submitted by explicitely setting the **Quality of Service** (either `--qos=interactive` or `--qos=preemptible`).
+- Interactive jobs are not intended for long-running computations that consume a large amount of resources. They are meant for quick explorations, installations (e.g. setting up virtual environments) or testing your code on the compute node. 
 
 ### Attach to a Running Job
 
@@ -641,31 +641,33 @@ srun python my_script.py
 **Note**: In batch jobs, `~/.bashrc` is not sourced, hence the shell is not initialized for the use of Conda environments in batch jobs. 
 The initialization needs to be done manually before conda is used via `eval "$(conda shell.bash hook)"`.
 
-#### Using Jupyter
+### Using Jupyter
 
-Using Jupyter Notebooks or Jupyter Lab sessions on the cluster is possible but requires some additional steps. 
+Using [Jupyter](https://jupyter.org/) Notebooks or Jupyter Lab sessions on the cluster is possible but requires some additional steps. 
 We acknowledge that Jupyter is widely used in the research community. 
 However, we do not recommend using it for long-running jobs on the cluster. 
-Expressing the workload as a batch job and running standard Python scripts may be the better option in most cases (cf. Section [Batch Jobs](#batch-jobs)). 
+Expressing the workload as a batch job and running standard Python scripts is likely the better option in most cases (cf. Section [Batch Jobs](#batch-jobs)). 
 Note that Jupyter Notebooks can be easily converted into plain Python scripts via `jupyter nbconvert --to script [YOUR_NOTEBOOK].ipynb`. 
 
 The notebook and its associated programming environment (e.g., Python3) are executed on the host system (i.e., a compute node in the cluster). 
-However, a connection to the respective Jupyter instance can be established using SSH and port forwarding.
+However, a connection to the respective Jupyter instance can be established using SSH and port forwarding. 
 
 Starting a Jupyter Notebook or Jupyter Lab session involves the following steps:
 
-- Start an interactive job with appropriate resources on the compute node:
+- Start an interactive job with appropriate resources:
     - `[login_node]$ srun --qos=interactive --pty --ntasks=1 bash`
+    - Once the resources are allocated, make sure to setup or activate a virtual environment with Jupyter installed 
 - Start the notebook (or lab) server on the compute node:
     - `[compute_node]$ jupyter notebook --no-browser --port=<host_port>`
     - `<host_port>` can be any free port >1000
 - Use SSH port forwarding to map the port of the Jupyter instance to a local port:
-    - In this case, a direct SSH connection with port forwarding from your own machine to the respective compute node is required:
-        - `[local_pc]$ ssh -N -L localhost:<local_port>:localhost:<host_port> <nodename>.in.ohmhs.de`
-        - The `<nodename>` can be found, e.g. by running the `hostname` command in your interactive session.
+    - SSH connections from the compute node to your own machine require a proxy jump via the login node:
+        - `[local_pc]$ ssh -N -L localhost:<local_port>:localhost:<host_port> -J <username>@<login_node>.in.ohmportal.de <username>@<compute_node>.in.ohmhs.de`
+    - The `<compute_node>` can be found, e.g. by running the `hostname` command in your interactive session.
+    - `<login_node>` refers to the cluster's login node. The hostname can be found in Moodle. 
     - `<local_port>` and `<host_port>` are the ports for Jupyter on your local PC and on the compute node, respectively.
-    - The local port can be any free port on your own machine. However, it is probably easiest to assign the same port:
-        - `[local_pc]$ ssh -N -L localhost:<host_port>:localhost:<host_port> <nodename>.in.ohmhs.de`
+    - The local port can be any free port on your own machine. However, it is probably easiest to assign the same port on both machines:
+        - `[local_pc]$ ssh -N -L localhost:<host_port>:localhost:<host_port> -J <username>@<login_node>.in.ohmportal.de <username>@<compute_node>.in.ohmhs.de`
 
 ## Using the Kaldi ASR Toolkit
 
