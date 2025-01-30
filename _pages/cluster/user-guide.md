@@ -1147,6 +1147,43 @@ nvidia-smi --query-gpu=pci.bus_id,timestamp,pstate,temperature.gpu,utilization.g
 
 **Hint:** A common usage pattern is to load the module (`module load nvtop`), [attach to a running job](#attach-to-a-running-job), and then check the job's GPU utilization by running the `nvtop` command.
 
+### NVIDIA Multi-Process Service
+
+[NVIDIA Multi-Process Service (MPS)](https://docs.nvidia.com/deploy/mps/index.html) is a runtime server that enables multiple CUDA processes to share a single GPU. 
+It creates a shared GPU context, manages its clients and reduces kernel launch overhead by allowing concurrent execution of lightweight CUDA workloads. 
+MPS is especially **beneficial when running workloads that do not fully saturate the GPU independently**. 
+
+**Usage example:**
+
+```bash
+# Set necessary environment variables and start the MPS daemon
+export CUDA_MPS_PIPE_DIRECTORY=$MY_DIR/nvidia-mps.$SLURM_JOB_ID
+# CUDA_MPS_PIPE_DIRECTORY specifies the directory where the MPS control daemon creates communication pipes for clients.
+# $MY_DIR must be a directory where the user has read and write access.
+
+export CUDA_MPS_LOG_DIRECTORY=$MY_DIR/nvidia-log.$SLURM_JOB_ID
+# CUDA_MPS_LOG_DIRECTORY specifies the directory where the MPS control daemon writes log files.
+# $MY_DIR must be a directory where the user has read and write access.
+
+nvidia-cuda-mps-control -d
+# Starts the MPS daemon in the background.
+
+# Run you computations (in this example, the Python script my_script.py is executed in parallel with different parameterizations)
+python my_script.py --param 1 & 
+# The "&" runs the script in the background, allowing other scripts to run concurrently.
+python my_script.py --param 2 & 
+python my_script.py --param 3 & 
+python my_script.py --param 4 & 
+wait
+# wait ensures that the shell waits for all background processes to finish before continuing.
+
+# Stop the MPS daemon
+echo quit | nvidia-cuda-mps-control
+# Sends the "quit" command to the MPS daemon, shutting it down.
+```
+
+Additional information about MPS, including configuration and management, can be found in the man page (`man nvidia-cuda-mps-control`). 
+The man page also describes useful additional environment variables, such as `CUDA_MPS_PINNED_DEVICE_MEM_LIMIT`, which controls the amount of pinned device memory (in bytes) available to MPS clients. 
 
 ### GPU-Profiling 
 
