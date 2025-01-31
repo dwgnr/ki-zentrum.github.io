@@ -1168,7 +1168,7 @@ export CUDA_MPS_LOG_DIRECTORY=$MY_DIR/nvidia-log.$SLURM_JOB_ID
 nvidia-cuda-mps-control -d
 # Starts the MPS daemon in the background.
 
-# Run you computations (in this example, the Python script my_script.py is executed in parallel with different parameterizations)
+# Run your computations (in this example, the Python script my_script.py is executed in parallel with different parameterizations)
 python my_script.py --param 1 & 
 # The "&" runs the script in the background, allowing other scripts to run concurrently.
 python my_script.py --param 2 & 
