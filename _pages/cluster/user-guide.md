@@ -658,7 +658,7 @@ Starting a Jupyter Notebook or Jupyter Lab session involves the following steps:
     - `[login_node]$ srun --qos=interactive --pty --ntasks=1 bash`
     - Once the resources are allocated, make sure to setup or activate a virtual environment with Jupyter installed 
 - Start the notebook (or lab) server on the compute node:
-    - `[compute_node]$ jupyter notebook --no-browser --port=<host_port>`
+    - `[compute_node]$ jupyter lab --no-browser --port=<host_port>`
     - `<host_port>` can be any free port >1000
 - Use SSH port forwarding to map the port of the Jupyter instance to a local port:
     - SSH connections from the compute node to your own machine require a proxy jump via the login node:
