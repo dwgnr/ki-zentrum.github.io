@@ -254,7 +254,7 @@ sacctmgr show assoc user=$USER format=user,qos%50
     - In other cases, CUDA or CUDA-related libraries may be missing on the host. Ensure you have the required module(s) loaded in the correct version (e.g. CUDA, cuDNN, etc.).
     - For information regarding GPU usage monitoring please refer to our [User Guide](user-guide/#working-with-nvidia-gpus). 
 - **How can I check whether my job utilizes the GPU properly?**
-    - Attach to a running job and use tools like `nvidia-smi` or `nvtop`
+    - Attach to a running job and use tools like `nvidia-smi` or `nvtop`.
     - For advanced users: Use profiling tools like `nsys` or `ncu`. 
     - See the [section on NVIDIA GPUs in our User Guide](user-guide/#working-with-nvidia-gpus) for more information.
 - **The GPU utilization of my Job is poor (i.e., small amount of energy drawn and/or low SM activity).**
@@ -262,10 +262,10 @@ sacctmgr show assoc user=$USER format=user,qos%50
         - Move to a partition on the cluster that is better suited for your workload (e.g. a small 50M parameter model training run can easily be executed on older GPU generations). 
         - Increase the batch size of your training/inference job. 
         - Improve data loading: 
-            - Allocate more workers (more CPUs) to preprocess and transfer data to the GPU
-            - Use faster storage for your data e.g. local SSDs instead of shared filesystem or store more data in main memory (RAM)
+            - Allocate more workers (more CPUs) to preprocess and transfer data to the GPU.
+            - Use faster storage for your data e.g. local SSDs instead of shared filesystem or store more data in main memory (RAM).
         - Stack multiple jobs on the same GPU using NVIDIA MPS (see this section in our [User Guide](user-guide/#nvidia-multi-process-service) for more details).
 - **I received an error message similar to `RuntimeError: CUDA Out of memory`.**
-    - The error indicates that your allocated GPU does not have enough main memory to execute the current task.
-    - Common causes of the `CUDA out of memory` error are the use of too large batch sizes or loading the model in full precision (`float32`), even though it is intended to be executed in half precision (`fp16`). Try reducing your batch size and/or converting your model/data to lower precision data types. 
+    - The error indicates that your allocated GPU does not have enough high-bandwidth memory (HBM) to execute the current task.
+    - Common causes of the `CUDA out of memory` error are the use of too large batch sizes or loading the model in full precision (`float32`), even though it is intended to be executed in half precision (`fp16` or `bf16`). Try reducing your batch size and/or converting your model/data to lower precision data types. 
     - For information regarding GPU usage monitoring please refer to our [User Guide](user-guide/#working-with-nvidia-gpus).
