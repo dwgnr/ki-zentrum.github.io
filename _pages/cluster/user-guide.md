@@ -503,6 +503,11 @@ srun --jobid=<your_job_id> --overlap --pty /bin/bash -l
 
 Attaching to a running job can be used e.g. to check GPU utilization via `nvidia-smi` or `nvtop`. 
 
+**Note:** Using `srun` within within `sbatch` scripts can prevent the launch of interactive steps. 
+In this case, try `sattach <your_job_id>.0` instead, or remove the `srun` directive from you batch script. 
+`.0` refers to the step ID of the job. 
+If multiple steps exist, you may need to adjust the step number accordingly.
+
 ## Environment Modules
 
 The [Environment Modules](https://modules.readthedocs.io/en/latest/#) tool allows setting environment variables for pre-installed software packages and libraries. 
@@ -564,7 +569,7 @@ Additionally, a recent [Anaconda](https://www.anaconda.com/) distribution is pro
 
 **Important Note:**
 
-When using Python, **ALWAYS** utilize isolated [virtual environments](https://docs.python.org/3/tutorial/venv.html) and refrain from installing packages **SYSTEM-WIDE**.
+When using Python, always use isolated [virtual environments](https://docs.python.org/3/tutorial/venv.html) and do not install packages system-wide.
 
 A virtual environment can be created and activated using the Python3 standard installation as follows:
 
