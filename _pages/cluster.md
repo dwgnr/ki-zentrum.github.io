@@ -173,6 +173,7 @@ sacctmgr show assoc user=$USER format=user,qos%50
 - Optimize performance by running short test jobs before committing resources to longer tasks. We recommend using the `seff <jobid>` command on completed jobs to get a quick overview of your resource efficiency. 
 - When using GPUs, make sure each GPU is properly utilized (a simple way to check is via the `nvidia-smi` command). Additional information can be found in the [Working with NVIDIA GPUs Section](user-guide/#working-with-nvidia-gpus) of our User Guide. 
 - Minimize I/O operations on slow file systems like NFS and try copying your data to fast node-local SSDs instead. 
+- Do not store large amounts of small files (>10k) on the cluster. Use zip files or wrappers such as [parquet](https://en.wikipedia.org/wiki/Apache_Parquet) instead. 
 - Remember that this is a multi-user environment. Blocking resources without using them affects your colleagues and fellow students. 
 - Before reaching out for assistance, read the [FAQs](#faqs) and [User Guide](user-guide) carefully. Many common problems are already discussed there. 
 - In case you still need assistance, contact our administrators at [kiz-slurm@th-nuernberg.de](mailto:kiz-slurm@th-nuernberg.de). 
