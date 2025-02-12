@@ -354,7 +354,8 @@ If you still want to control the number of GPUs per task specifically, you would
 #SBATCH --ntasks=2              # Total number of tasks
 ```
 
-With this setup, you'll allocate 1 GPU, shared across 2 tasks on that node. If each task needs its own GPU, increase the value of `--gres=gpu:<num_gpus>` accordingly.
+With this setup, you'll allocate 1 GPU, shared across 2 tasks on that node. 
+If each task needs its own GPU, increase the value of `--gres=gpu:<num_gpus>` accordingly.
 
 **Note:** The `--mem-per-gpu` directive refers to the **main memory (RAM)** on the compute node and not the available High-Bandwidth Memory (HBM) on the GPU. By setting `--gres=gpu:<num_gpus>`, you will always have the full HBM (e.g. 40GB/80GB on an A100) at your disposal. 
 
@@ -372,10 +373,10 @@ A typical submission script is structured as follows:
 ```bash
 #!/bin/bash
 #
-#SBATCH --job-name=test_job
+#SBATCH --job-name=my_job
 #SBATCH --output=test-%j.out
 #SBATCH --error=test-%j.err
-#SBATCH --mail-user=email@addresse.de
+#SBATCH --mail-user=email@address.de
 #SBATCH --mail-type=ALL
 #
 #SBATCH --nodes=1
@@ -394,7 +395,9 @@ Assuming the *submission* script is named `my_batchjob.sh`, it is submitted to S
 The above script reserves two CPUs, one GPU, and 500MB of RAM per allocated CPU (i.e., 1GB in total) for 10 minutes (format `HH:MM:SS`). 
 Within this batch job, two *job steps* are to be executed.
 In the first step, the hostname of the compute node (`srun hostname`) is printed.
-In the second step prints information about the Linux distribution installed on the compute node.
+In the second step prints information about the Linux distribution installed on the compute node. 
+The `srun` commands in the submission script are not mandatory, i.e., it would be sufficient to run `hostname` or `cat /etc/*rel*` without `srun`. 
+Starting each command with `srun` is primarily useful if more granular resource definition and tracking is required. 
 
 The outputs are stored in the file `test-%j.out`, where `%j` represents the job ID.
 Any errors that occur during execution are saved in `test-%j.err`. 
@@ -418,7 +421,7 @@ Execution is done with `sbatch name_of_template.sh`.
 #SBATCH --job-name=job-template   # Short name of the job
 #SBATCH --nodes=1                 # Number of nodes needed
 #SBATCH --ntasks=1                # Total number of tasks across all nodes
-#SBATCH --partition=p0            # Partition used (e.g., p0, p1, p2, p3, p4 or all)
+#SBATCH --partition=p0            # Partition used (e.g., p0, p1, p2, p3, p4, p6 or all)
 #SBATCH --time=08:00:00           # Total time limit for job runtime (Format: HH:MM:SS)
 #SBATCH --cpus-per-task=8         # Number of CPUs per task
 #SBATCH --mem=16G                 # Total main memory per node
@@ -429,9 +432,12 @@ Execution is done with `sbatch name_of_template.sh`.
 
 echo "=================================================================="
 echo "Starting Batch Job at $(date)"
-echo "Job submitted to partition ${SLURM_JOB_PARTITION} on ${SLURM_CLUSTER_NAME}"
-echo "Job name: ${SLURM_JOB_NAME}, Job ID: ${SLURM_JOB_ID}"
-echo "Requested ${SLURM_CPUS_ON_NODE} CPUs on compute node $(hostname)"
+echo "Partition: ${SLURM_JOB_PARTITION}"
+echo "Job name: ${SLURM_JOB_NAME}"
+echo "Job ID: ${SLURM_JOB_ID}"
+echo "Requested CPUs: ${SLURM_CPUS_ON_NODE}"
+echo "Requested GPUs: ${SLURM_GPUS_ON_NODE:-0}"
+echo "Compute node: $(hostname)"
 echo "Working directory: $(pwd)"
 echo "=================================================================="
 
@@ -446,8 +452,7 @@ mkdir -p CACHE_DIR
 ########################################################
 
 ########## Define your own workload here ###############
-srun my_script1
-srun my_script2
+my_executable
 ########################################################
 ```
 
@@ -490,7 +495,7 @@ This continues until `exit` is called or a time limit is reached.
 
 **Important Notes:** 
 
-- Interactive jobs with `srun` or `salloc`, unless when used within a submission script, can only be submitted by explicitely setting the **Quality of Service** (either `--qos=interactive` or `--qos=preemptible`).
+- Interactive jobs with `srun` or `salloc`, unless when used within a submission script, can only be submitted by **explicitely setting the QoS** (either `--qos=interactive` or `--qos=preemptible`).
 - Interactive jobs are not intended for long-running computations that consume a large amount of resources. They are meant for quick explorations, installations (e.g. setting up virtual environments) or testing your code on the compute node. 
 
 ### Attach to a Running Job
