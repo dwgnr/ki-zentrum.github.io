@@ -105,9 +105,9 @@ This an example of a typical submission script for the KIZ HPC cluster:
 #SBATCH --time=00:10:00    # Runtime limit (Format HH:MM:SS)
 
 ##### Steps to be executed on the compute node #####
-srun echo "Compute node $(hostname)"
-srun sleep 5s
-srun cat /etc/*rel*
+echo "Compute node $(hostname)"
+sleep 5s
+cat /etc/*rel*
 ```
 
 **Hint:** You can **attach to a running job** by executing 
