@@ -1114,18 +1114,22 @@ Of course, the same rules that apply for VSCode also apply to those IDEs.
 
 ### CUDA Compilers and Libraries
 
-Each compute node has a standard set of [CUDA compilers and runtime libraries](https://developer.nvidia.com/cuda-toolkit) installed. Additionally, we offer several alternative versions of CUDA and corresponding libraries like [cuDNN](https://developer.nvidia.com/cudnn) and [CUTLASS](https://github.com/NVIDIA/cutlass) via [Environment Modules](#environment-modules):
+Each compute node has a standard set of [CUDA compilers and runtime libraries](https://developer.nvidia.com/cuda-toolkit) installed. 
+Additionally, we offer several alternative versions of CUDA and corresponding libraries like [cuDNN](https://developer.nvidia.com/cudnn) and [CUTLASS](https://github.com/NVIDIA/cutlass), as well as the [NVIDIA HPC SDK](https://developer.nvidia.com/hpc-sdk) via [Environment Modules](#environment-modules):
 
 ```bash
 # module avail
---------------------------------------------------------------------------------------------------------------- /usr/local/Modules/modulefiles ----------------------------------------------------------------------------------------------------------------
-cmake/cmake-3.26.4  cuda/cuda-11.8.0   cudnn/cudnn-8.2.4.15-11.4  dot             git/git-2.42.0             jdk/openjdk-17.0.8.1_1    module-git   neovim/0.9.4    null               python/anaconda3  use.own
-cuda/11             cuda/cuda-12.3     cudnn/cudnn-8.7.0.84-11.8  gcc/gcc-10.5.0  jdk/openjdk-1.8.0_265-b01  llvm/llvm-17.0.4          module-info  nodejs/18.12.1  nvtop/nvtop-3.0.1  ripgrep/13.0.0
-cuda/cuda-11.4.4    cuda/cuda-memtest  cutlass/2.9.1              gcc/gcc-12.3.0  jdk/openjdk-11.0.20.1_1    mkl/intel-mkl-2020.4.304  modules      npm/9.3.1       openmpi            rust/1.70.0
+-------------------------------------------------------------- /usr/local/Modules/modulefiles --------------------------------------------------------------
+cmake/cmake-3.26.4  cuda/cuda-12.6             cutlass/cutlass-3.4.1  glibc/2.35                 module-git      null                  ripgrep/13.0.0
+cuda/cuda-11.4.4    cuda/cuda-memtest          dot                    jdk/openjdk-1.8.0_265-b01  module-info     nvhpc/nvhpc-24.9      rust/1.70.0
+cuda/cuda-11.8.0    cudnn/cudnn-8.2.4.15-11.4  gcc/gcc-10.5.0         jdk/openjdk-11.0.20.1_1    modules         nvtop/nvtop-3.0.1     use.own
+cuda/cuda-12.2.1    cudnn/cudnn-8.7.0.84-11.8  gcc/gcc-12.3.0         jdk/openjdk-17.0.8.1_1     neovim/0.9.4    openmpi
+cuda/cuda-12.3.1    cudnn/cudnn-9.2.0.82-12    gcc/gcc-14.2.0         llvm/llvm-17.0.4           nodejs/18.12.1  python/anaconda3
+cuda/cuda-12.5.1    cutlass/2.9.1              git/git-2.42.0         mkl/intel-mkl-2020.4.304   npm/9.3.1       python/python-3.13.0
 ```
 
 
-Loading the respective module, e.g. `module load cuda/cuda-12.3`, adjusts the typical environment variables and also sets `CUDA_HOME`, which can be used in your projects e.g. with `make` and `cmake`.
+Loading the respective module, e.g. `module load cuda/cuda-12.6`, adjusts the typical environment variables and also sets `CUDA_HOME`, which can be used in your projects e.g. with `make` and `cmake`.
 
 
 ### NVIDIA System Management Interface (`nvidia-smi`)
