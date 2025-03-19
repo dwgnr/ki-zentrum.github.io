@@ -567,23 +567,39 @@ If you have specific package requirements, please contact our administrators at 
 
 
 ## Python
-Various Python distributions are available in the cluster.
 
-The default environments include Python 2.7 and Python 3.8 (invoked with `python2` and `python3`, respectively).
-Additionally, a recent [Anaconda](https://www.anaconda.com/) distribution is provided.
+There are three main ways to access Python distributions in the cluster:
+
+1. Use the system-wide installed versions that come with the Linux distro. Note that these versions may change with system upgrades. However, we aim to keep several of the most recent versions around at any time. 
+    - Check for available interpreters with `ls /usr/bin/python*`. 
+    - Start the interpreter e.g. with `python <my_script>.py`, `python3 <my_script>.py`, or use a specific version `python3.10 <my_script>.py`. 
+    - See the **important note** below regarding virtual environments!
+2. Use Spack-installed Python distributions available through [Environment Modules](#environment-modules).
+    - Use `module avail` to check for available versions and load the appropriate module (e.g. `module load python/python-3.13.0`). 
+3. Use any Python version with [Anaconda](https://www.anaconda.com/). 
+    - See the [Anaconda](#anaconda) section below for instructions on how to use the Anaconda distribution.  
 
 **Important Note:**
 
-When using Python, always use isolated [virtual environments](https://docs.python.org/3/tutorial/venv.html) and do not install packages system-wide.
-
-A virtual environment can be created and activated using the Python3 standard installation as follows:
+Python users should always use isolated [virtual environments](https://docs.python.org/3/tutorial/venv.html)! 
+Virtual environments are created and used as follows:
 
 ```bash
-# Creation of the virtual environment
+# Create the virtual environment.
 python3 -m venv my-venv
-# Activation of the virtual environment
+
+# Activate the virtual environment.
 source my-venv/bin/activate
-# From here on, packages are installed in my-venv and not system-wide
+# From here on, any newly installed packages will be part of my-venv and the interpreter linked to this environment will be used to execute code.
+pip install <my_package>
+
+# This will run in the virtual environment.
+python <my_script>.py
+
+# Deactivate the environment if no longer needed
+deactivate
+
+# From here on, the packages installed in my-venv are no longer availanle. 
 ```
 
 ### Anaconda
@@ -611,7 +627,7 @@ conda create --name my-condaenv
 # Activating the environment
 conda activate my-condaenv
 # Installing a package
-conda install <somepackage>
+conda install <my_package>
 # Deactivating the environment
 conda deactivate
 # Creating an environment with a specific version of Python
@@ -621,12 +637,13 @@ conda env list
 ```
 
 By default, packages and dependencies are installed under `/home/$USER/.conda`.
-This path can be changed using `--prefix`, which is advisable since the quota for your home directory 
-is quite limited (see [Important Directories](#important-directories) section) and Python package installations 
-can quickly consume all of the available storage capacity:
+This path can be changed using the `--prefix` argument. 
+We recommend doing this, since the quotas for home directories are very limited (see [Important Directories](#important-directories) section) and Python package installations can quickly consume all of the available storage capacity.
+
+This example changes the path to a shared filesystem with more space available to the user: 
 
 ```bash
-conda create --prefix /tmp/my-condaenv
+conda create --prefix /nfs/scratch/students/$USER/my-condaenv
 ```
 
 The following example demonstrates the usage of an Anaconda environment in a batch job:
@@ -645,7 +662,7 @@ module load python/anaconda3
 eval "$(conda shell.bash hook)"
 conda activate my-condaenv
 
-srun python my_script.py
+python my_script.py
 ```
 
 **Note**: In batch jobs, `~/.bashrc` is not sourced, hence the shell is not initialized for the use of Conda environments in batch jobs. 
