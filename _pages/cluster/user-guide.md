@@ -72,21 +72,27 @@ Therefore, ensure that your SSH client uses the **correct key** to establish the
 Hints about the directories where the client searches for keys or which keys are used for authentication are provided by the `-v` argument (e.g., `ssh -vvv <username>@<hostname>`).
 
 To ensure that the right key is used for the connection, you can also pass the private key as an argument to the command (`ssh -i /path/to/private_key <username>@<hostname>`). 
-Alternatively, connection parameters can be defined with a configuration file. 
-Configuration files are named `config` and can look like this:
+
+Another common issue is the **accidental use of the wrong username**. 
+If you don't set the username explicitely in the SSH command (`ssh <username>@<hostname>`) or via the `~/.ssh/config`, the SSH client will use the username of your local PC, which is likely not the same as your username for the cluster. 
+Cluster usernames follow the THN standard scheme (e.g. *mustermannma12345* for students and *mustermannma* for staff).
+
+We recommend to define the connection parameters in a configuration file. 
+Configuration files are named `config` and look like this:
 
 ```bash
 # ~/.ssh/config
-
-Host kiz_cluster_controlhost
-  HostName <hostname_of_controlhost>
-  User <username>
-  IdentityFile ~/.ssh/<my-private-key>
+Host <some_alias_for_controlhost> <another_alias_for_controlhost>
+    HostName <hostname>                    # The actual remote hostname to connect to.
+    User <username>                        # The username to use when logging in to the remote server.
+    IdentityFile ~/.ssh/<private_key>      # The private key file for authentication.
+    IdentitiesOnly yes                     # Ensures only the specified IdentityFile is used, ignoring agent-provided keys.
+    PasswordAuthentication no              # Disables password-based authentication, enforcing key-based authentication.
+    PreferredAuthentications publickey     # Specifies the preferred authentication method as public key authentication.
 ```
 
-Another common issue is the accidental use of the wrong username. 
-If you don't set the username explicitely in the SSH command (`ssh <username>@<hostname>`) or via the `~/.ssh/config`, the SSH client will use the username of your local PC, which is likely not the same as your username for the cluster. 
-Cluster usernames follow the THN standard scheme (e.g. *mustermannma12345* for students and *mustermannma* for staff).
+This configuration allows you to connect to `<hostname>` with the command `ssh <some_alias_for_controlhost>` or `ssh <another_alias_for_controlhost>`, using a key-based authentication method and disallowing password authentication and limiting the authentication keys to those explicitly specified.
+
 
 #### Public Keys via Email
 
@@ -289,7 +295,7 @@ The `TIME` field shows how long the job has been in the `RUNNING` state.
 
 Running jobs for the user's own account can be checked with `squeue -u $USER -t RUNNING`.
 
-A detailed guide on using each command and its arguments can be viewed with `man [slurmcommand]` (e.g., `man sinfo`). 
+A detailed guide on using each command and its arguments can be viewed with `man <slurmcommand>` (e.g., `man sinfo`). 
 Alternatively, the `--help` argument can also be used (e.g., `sinfo --help`).
 
 ## Creating Jobs
@@ -674,7 +680,7 @@ Using [Jupyter](https://jupyter.org/) Notebooks or Jupyter Lab sessions on the c
 We acknowledge that Jupyter is widely used in the research community. 
 However, we do not recommend using it for long-running jobs on the cluster. 
 Expressing the workload as a batch job and running standard Python scripts is likely the better option in most cases (cf. Section [Batch Jobs](#batch-jobs)). 
-Note that Jupyter Notebooks can be easily converted into plain Python scripts via `jupyter nbconvert --to script [YOUR_NOTEBOOK].ipynb`. 
+Note that Jupyter Notebooks can be easily converted into plain Python scripts via `jupyter nbconvert --to script <YOUR_NOTEBOOK.ipynb>`. 
 
 The notebook and its associated programming environment (e.g., Python3) are executed on the host system (i.e., a compute node in the cluster). 
 However, a connection to the respective Jupyter instance can be established using SSH and port forwarding. 
@@ -686,7 +692,7 @@ Starting a Jupyter Notebook or Jupyter Lab session involves the following steps:
     - Once the resources are allocated, make sure to setup or activate a virtual environment with Jupyter installed 
 - Start the notebook (or lab) server on the compute node:
     - `[compute_node]$ jupyter lab --no-browser --port=<host_port>`
-    - `<host_port>` can be any free port >1000
+    - `<host_port>` can be any non-priviliged free port >1024
 - Use SSH port forwarding to map the port of the Jupyter instance to a local port:
     - SSH connections from the compute node to your own machine require a proxy jump via the login node:
         - `[local_pc]$ ssh -N -L localhost:<local_port>:localhost:<host_port> -J <username>@<login_node>.in.ohmportal.de <username>@<compute_node>.in.ohmhs.de`
@@ -778,7 +784,7 @@ export cuda_cmd="slurm.pl --gpu 1 --config conf/slurm.conf"
 
 Here, different commands for various parts of a Kaldi recipe are defined. When using an existing recipe, 
 the corresponding commands are usually already included in `cmd.sh`. 
-The values of the variables just need to be adjusted to enable parallelization with Slurm (i.e., using `slurm.pl [params]` instead of `run.pl|queue.pl`).
+The values of the variables just need to be adjusted to enable parallelization with Slurm (i.e., using `slurm.pl <params>` instead of `run.pl|queue.pl`).
 
 ## Container with Enroot and Pyxis
 
