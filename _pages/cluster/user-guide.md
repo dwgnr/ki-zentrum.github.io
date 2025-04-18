@@ -944,7 +944,7 @@ Execution: `sbatch template_name.sh`
 #SBATCH --gres=gpu:1              # Total number of GPUs per node
 #SBATCH --mail-type=ALL           # Type of email (valid values e.g., ALL, BEGIN, END, FAIL, or REQUEUE)
 #SBATCH --mail-user=<USERNAME>@th-nuernberg.de # Email address for status emails (Please replace <USERNAME> with a valid username)
-#SBATCH --container-image=/nfs/scratch/students/$USER/pytorch.sqsh # Loading the previously saved image
+#SBATCH --container-image=/nfs/scratch/students/<USERNAME>/pytorch.sqsh # Loading the previously saved image
 
 # Simple example job. Please replace with appropriate custom scripts.
 c=`cat <<EOF
@@ -1048,8 +1048,10 @@ There are several shared directories available on all nodes, i.e., files stored 
 These directories serve different purposes, which are briefly explained here:
 
 - `/home/$USER` or `$HOME`: In this directory, **20GB of storage space** is available per user.
-    - **Note:** The directory is mainly intended for source code, configuration files, and very small amounts of data. However, the **cache directory** (often `/home/$USER/.cache`) of many **package managers** (e.g., [PIP](https://pip.pypa.io/en/stable/)) is also located here by default. Please ensure that your storage quota is not reached due to a full cache directory. This can be done either by making sure that cache directories are emptied on a regular basis or by moving these directories to another location. The cache directory of many package managers can be easily changed via environment variables. An example of this can be found in the [Job Template](#job-template) section.
-- `/nfs/scratch/students/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
+    - **Note:** The directory is mainly intended for source code, configuration files, and very small amounts of data. However, the **cache directory** (often `/home/$USER/.cache`) of many **package managers** (e.g., [PIP](https://pip.pypa.io/en/stable/)) is also located here by default. Please ensure that your storage quota is not reached due to a full cache directory. This can be done either by making sure that cache directories are emptied on a regular basis or by moving these directories to another location. The cache directory of many package managers can be easily changed via environment variables. An example of this can be found in the [Job Template](#job-template) section. This directory receives **regular backups**. 
+- `/nfs/scratch/<students|staff>/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
+    - **Caution:** The directory does **not receive regular backups**. Therefore, important files should be regularly transferred to the student's own PC/laptop or to a Git repository.
+- `/nfs1/scratch/<students|staff>/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
     - **Caution:** The directory does **not receive regular backups**. Therefore, important files should be regularly transferred to the student's own PC/laptop or to a Git repository.
 - `/nfs/data`: This directory contains various datasets (mainly speech corpora) that can be used, for example, for machine learning applications. The directory is read-only for all users. **Note:** Clarify with the supervisor of your project, whether the required data might already be available under `/nfs/data` before downloading it yourself. 
 - `/net/ml[0-N]`: These paths allow network access to the local SSD hard drives of the individual compute nodes. The default quota on these disks is **100GB**. They are not intended for permanent storage and should only be used for jobs that require lots of I/O and therefore not faster access to storage. The idea is to first copy your data onto the SSD (e.g. via `rsync`), execute your job and then delete the data once your job is finished.  
