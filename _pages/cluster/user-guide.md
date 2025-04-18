@@ -72,21 +72,27 @@ Therefore, ensure that your SSH client uses the **correct key** to establish the
 Hints about the directories where the client searches for keys or which keys are used for authentication are provided by the `-v` argument (e.g., `ssh -vvv <username>@<hostname>`).
 
 To ensure that the right key is used for the connection, you can also pass the private key as an argument to the command (`ssh -i /path/to/private_key <username>@<hostname>`). 
-Alternatively, connection parameters can be defined with a configuration file. 
-Configuration files are named `config` and can look like this:
+
+Another common issue is the **accidental use of the wrong username**. 
+If you don't set the username explicitely in the SSH command (`ssh <username>@<hostname>`) or via the `~/.ssh/config`, the SSH client will use the username of your local PC, which is likely not the same as your username for the cluster. 
+Cluster usernames follow the THN standard scheme (e.g. *mustermannma12345* for students and *mustermannma* for staff).
+
+We recommend to define the connection parameters in a configuration file. 
+Configuration files are named `config` and look like this:
 
 ```bash
 # ~/.ssh/config
-
-Host kiz_cluster_controlhost
-  HostName <hostname_of_controlhost>
-  User <username>
-  IdentityFile ~/.ssh/<my-private-key>
+Host <some_alias_for_controlhost> <another_alias_for_controlhost>
+    HostName <hostname>                    # The actual remote hostname to connect to.
+    User <username>                        # The username to use when logging in to the remote server.
+    IdentityFile ~/.ssh/<private_key>      # The private key file for authentication.
+    IdentitiesOnly yes                     # Ensures only the specified IdentityFile is used, ignoring agent-provided keys.
+    PasswordAuthentication no              # Disables password-based authentication, enforcing key-based authentication.
+    PreferredAuthentications publickey     # Specifies the preferred authentication method as public key authentication.
 ```
 
-Another common issue is the accidental use of the wrong username. 
-If you don't set the username explicitely in the SSH command (`ssh <username>@<hostname>`) or via the `~/.ssh/config`, the SSH client will use the username of your local PC, which is likely not the same as your username for the cluster. 
-Cluster usernames follow the THN standard scheme (e.g. *mustermannma12345* for students and *mustermannma* for staff).
+This configuration allows you to connect to `<hostname>` with the command `ssh <some_alias_for_controlhost>` or `ssh <another_alias_for_controlhost>`, using a key-based authentication method and disallowing password authentication and limiting the authentication keys to those explicitly specified.
+
 
 #### Public Keys via Email
 
@@ -289,7 +295,7 @@ The `TIME` field shows how long the job has been in the `RUNNING` state.
 
 Running jobs for the user's own account can be checked with `squeue -u $USER -t RUNNING`.
 
-A detailed guide on using each command and its arguments can be viewed with `man [slurmcommand]` (e.g., `man sinfo`). 
+A detailed guide on using each command and its arguments can be viewed with `man <slurmcommand>` (e.g., `man sinfo`). 
 Alternatively, the `--help` argument can also be used (e.g., `sinfo --help`).
 
 ## Creating Jobs
@@ -674,7 +680,7 @@ Using [Jupyter](https://jupyter.org/) Notebooks or Jupyter Lab sessions on the c
 We acknowledge that Jupyter is widely used in the research community. 
 However, we do not recommend using it for long-running jobs on the cluster. 
 Expressing the workload as a batch job and running standard Python scripts is likely the better option in most cases (cf. Section [Batch Jobs](#batch-jobs)). 
-Note that Jupyter Notebooks can be easily converted into plain Python scripts via `jupyter nbconvert --to script [YOUR_NOTEBOOK].ipynb`. 
+Note that Jupyter Notebooks can be easily converted into plain Python scripts via `jupyter nbconvert --to script <YOUR_NOTEBOOK.ipynb>`. 
 
 The notebook and its associated programming environment (e.g., Python3) are executed on the host system (i.e., a compute node in the cluster). 
 However, a connection to the respective Jupyter instance can be established using SSH and port forwarding. 
@@ -686,7 +692,7 @@ Starting a Jupyter Notebook or Jupyter Lab session involves the following steps:
     - Once the resources are allocated, make sure to setup or activate a virtual environment with Jupyter installed 
 - Start the notebook (or lab) server on the compute node:
     - `[compute_node]$ jupyter lab --no-browser --port=<host_port>`
-    - `<host_port>` can be any free port >1000
+    - `<host_port>` can be any non-priviliged free port >1024
 - Use SSH port forwarding to map the port of the Jupyter instance to a local port:
     - SSH connections from the compute node to your own machine require a proxy jump via the login node:
         - `[local_pc]$ ssh -N -L localhost:<local_port>:localhost:<host_port> -J <username>@<login_node>.in.ohmportal.de <username>@<compute_node>.in.ohmhs.de`
@@ -778,7 +784,7 @@ export cuda_cmd="slurm.pl --gpu 1 --config conf/slurm.conf"
 
 Here, different commands for various parts of a Kaldi recipe are defined. When using an existing recipe, 
 the corresponding commands are usually already included in `cmd.sh`. 
-The values of the variables just need to be adjusted to enable parallelization with Slurm (i.e., using `slurm.pl [params]` instead of `run.pl|queue.pl`).
+The values of the variables just need to be adjusted to enable parallelization with Slurm (i.e., using `slurm.pl <params>` instead of `run.pl|queue.pl`).
 
 ## Container with Enroot and Pyxis
 
@@ -938,7 +944,7 @@ Execution: `sbatch template_name.sh`
 #SBATCH --gres=gpu:1              # Total number of GPUs per node
 #SBATCH --mail-type=ALL           # Type of email (valid values e.g., ALL, BEGIN, END, FAIL, or REQUEUE)
 #SBATCH --mail-user=<USERNAME>@th-nuernberg.de # Email address for status emails (Please replace <USERNAME> with a valid username)
-#SBATCH --container-image=/nfs/scratch/students/$USER/pytorch.sqsh # Loading the previously saved image
+#SBATCH --container-image=/nfs/scratch/students/<USERNAME>/pytorch.sqsh # Loading the previously saved image
 
 # Simple example job. Please replace with appropriate custom scripts.
 c=`cat <<EOF
@@ -1042,8 +1048,10 @@ There are several shared directories available on all nodes, i.e., files stored 
 These directories serve different purposes, which are briefly explained here:
 
 - `/home/$USER` or `$HOME`: In this directory, **20GB of storage space** is available per user.
-    - **Note:** The directory is mainly intended for source code, configuration files, and very small amounts of data. However, the **cache directory** (often `/home/$USER/.cache`) of many **package managers** (e.g., [PIP](https://pip.pypa.io/en/stable/)) is also located here by default. Please ensure that your storage quota is not reached due to a full cache directory. This can be done either by making sure that cache directories are emptied on a regular basis or by moving these directories to another location. The cache directory of many package managers can be easily changed via environment variables. An example of this can be found in the [Job Template](#job-template) section.
-- `/nfs/scratch/students/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
+    - **Note:** The directory is mainly intended for source code, configuration files, and very small amounts of data. However, the **cache directory** (often `/home/$USER/.cache`) of many **package managers** (e.g., [PIP](https://pip.pypa.io/en/stable/)) is also located here by default. Please ensure that your storage quota is not reached due to a full cache directory. This can be done either by making sure that cache directories are emptied on a regular basis or by moving these directories to another location. The cache directory of many package managers can be easily changed via environment variables. An example of this can be found in the [Job Template](#job-template) section. This directory receives **regular backups**. 
+- `/nfs/scratch/<students|staff>/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
+    - **Caution:** The directory does **not receive regular backups**. Therefore, important files should be regularly transferred to the student's own PC/laptop or to a Git repository.
+- `/nfs1/scratch/<students|staff>/$USER`: Users can store larger amounts of data in this directory. The default quota here is **200GB** and can be extended upon request. 
     - **Caution:** The directory does **not receive regular backups**. Therefore, important files should be regularly transferred to the student's own PC/laptop or to a Git repository.
 - `/nfs/data`: This directory contains various datasets (mainly speech corpora) that can be used, for example, for machine learning applications. The directory is read-only for all users. **Note:** Clarify with the supervisor of your project, whether the required data might already be available under `/nfs/data` before downloading it yourself. 
 - `/net/ml[0-N]`: These paths allow network access to the local SSD hard drives of the individual compute nodes. The default quota on these disks is **100GB**. They are not intended for permanent storage and should only be used for jobs that require lots of I/O and therefore not faster access to storage. The idea is to first copy your data onto the SSD (e.g. via `rsync`), execute your job and then delete the data once your job is finished.  

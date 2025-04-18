@@ -55,6 +55,8 @@ These are some of the more important storage locations:
     - For source code and configuration files (*20GB Quota*)
 - `/nfs/scratch/<students|staff>/$USER`:
     - For storing larger amounts of data (*200GB Quota*)
+- `/nfs1/scratch/<students|staff>/$USER`:
+    - For storing larger amounts of data (*200GB Quota*)
 - `/nfs/data`:
     - Various datasets (read-only access)
 - `/mnt/md0/$USER`:
