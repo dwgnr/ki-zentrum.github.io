@@ -404,6 +404,7 @@ In the first step, the hostname of the compute node (`srun hostname`) is printed
 In the second step prints information about the Linux distribution installed on the compute node. 
 The `srun` commands in the submission script are not mandatory, i.e., it would be sufficient to run `hostname` or `cat /etc/*rel*` without `srun`. 
 Starting each command with `srun` is primarily useful if more granular resource definition and tracking is required. 
+However, it prevents the launch of interactive steps and you won't be able to [attach to the running job](#attach-to-a-running-job) as easily. 
 
 The outputs are stored in the file `test-%j.out`, where `%j` represents the job ID.
 Any errors that occur during execution are saved in `test-%j.err`. 
@@ -506,13 +507,13 @@ This continues until `exit` is called or a time limit is reached.
 
 ### Attach to a Running Job
 
-Use the following command on the login node to attach to one of your running jobs:
+Use the following command on the login node to attach an interactive session to one of your running jobs:
 
 ```bash
 srun --jobid=<your_job_id> --overlap --pty /bin/bash -l
 ```
 
-Attaching to a running job can be used e.g. to check GPU utilization via `nvidia-smi` or `nvtop`. 
+Attaching to running jobs is useful for dynamically debugging code at runtime or to monitor resource utilization (e.g. check GPU utilization with `nvidia-smi` or `nvtop`). 
 
 **Note:** Using `srun` within within `sbatch` scripts can prevent the launch of interactive steps. 
 In this case, try `sattach <your_job_id>.0` instead, or remove the `srun` directive from you batch script. 
@@ -605,7 +606,7 @@ python <my_script>.py
 # Deactivate the environment if no longer needed
 deactivate
 
-# From here on, the packages installed in my-venv are no longer availanle. 
+# From here on, the packages installed in my-venv are no longer available. 
 ```
 
 ### Anaconda

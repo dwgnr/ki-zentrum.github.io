@@ -112,7 +112,7 @@ sleep 5s
 cat /etc/*rel*
 ```
 
-**Hint:** You can **attach to a running job** by executing 
+**Hint:** You can attach an interactive session to a running job by executing 
 ```bash
 srun --jobid=<your_job_id> --overlap --pty /bin/bash -l
 ``` 
