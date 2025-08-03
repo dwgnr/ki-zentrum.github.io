@@ -107,12 +107,7 @@ Slurm fulfills three important functions:
 
 - Allocation of resources (compute nodes, CPU cores, memory, time, etc.) based on user requests.
 - Starting, executing, and monitoring jobs on the cluster.
-- Building a queue for existing resource requests.
-
-As a rule of thumb for resource allocation:
-
-- The more resources (CPUs, GPUs, RAM, and time) a task requires, the longer it takes for the job to start.
-- To minimize wait time, you should determine in advance (as accurately as possible), which resources are actually needed for the respective task.
+- Building a queue for existing resource requests. 
 
 The *Controlhost* is your login node and the place where you submit jobs to the workload manager (i.e., Slurm) for execution on the compute nodes.
 
@@ -247,6 +242,57 @@ To do so, please contact our administrators at [kiz-slurm@th-nuernberg.de](mailt
 Your e-mail should contain the following: 
 - A brief reason why you need the additional resources
 - For students: The name of your advisor and the title of your project 
+
+## Job Prioritization on the Cluster
+
+Once all resources on the cluster are allocated, pending jobs are sorted by priority to determine which job will run next when resources become available. The cluster uses Slurm's [multifactor priority plugin](https://slurm.schedmd.com/priority_multifactor.html), which calculates a numerical priority score for each job based on multiple weighted components. The job with the highest total priority score is scheduled first.
+
+### Factors Affecting Job Priority
+
+The following weights are used to compute job priority:
+
+- **TRES (Trackable Resources)**: Jobs requesting more CPU, memory, or GPUs get higher priority. 
+- **Age**: Jobs waiting longer accumulate higher priority over time. 
+- **QOS (Quality of Service)**: Each QOS level has an associated static priority boost.
+- **Job Size**: Larger jobs get slightly higher priority. 
+- **Fairshare**: Ensures fair usage of resources across users and groups over time.
+
+### Fairshare: Staff vs. Students
+
+[Fairshare](https://slurm.schedmd.com/fair_tree.html) adjusts job priority based on recent resource usage and group assignment. In our setup:
+
+- Staff members have a higher fairshare weight than students.
+- This means, all else being equal, a job sent by a staff member will receive a higher priority if both a staff and a student job are competing for resources.
+
+The fairshare algorithm also promotes long-term fairness, i.e, users or groups consuming fewer resources recently will receive higher priority boosts.
+
+### QOS-Based Priority
+
+Each job is submitted with a QOS that adds a fixed bonus to the priority. 
+Using a QOS with a lower priority leads to a smaller overall priority. 
+
+The current QOS priorities can be displayed with: 
+
+```bash
+sacctmgr show qos format=name%20,priority
+```
+
+### Viewing Job Priority
+
+Users can inspect how Slurm computed a job's priority using the `sprio` command. It breaks down the total priority into its individual components.
+
+#### Example
+
+```bash
+$ sprio
+JOBID PARTITION      USER      PRIORITY        AGE  FAIRSHARE    JOBSIZE        QOS                      TRES
+46958 p2        staffmember       4982          0       3720         24       1000 cpu=25,mem=13,gres/gpu=20
+46959 p2        student12345      1768          0        506         24       1000 cpu=25,mem=13,gres/gpu=20
+```
+- Both jobs request the same resources (same TRES weight).
+- Both jobs have the same QOS and job size contributions.
+- In this case, the fairshare component is the main differentiator, assigning a higher priority to the staff member compared to the student.  
+- The staff member's job will start before the student's once resources free up, assuming all other factors remain constant.
 
 
 ## Cluster Information
