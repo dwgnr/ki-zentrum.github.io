@@ -135,12 +135,12 @@ salloc --qos=interactive \
     --time=00:10:00
 ```
 
-**Important Note:** Interactive jobs can only be started with the QOSs `--qos=interactive` (guaranteed resource tier) or the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument always has to be passed explicitely to `srun` or `salloc`. 
+**Important Note:** Interactive jobs can only be started with the `--qos=interactive` (guaranteed resource tier) and the `--qos=preemptible` (non-guaranteed resource tier) flags. The argument has to be passed explicitely to `srun` or `salloc`. 
 
 #### Quality of Service
 
 - User-specific resource allocation is managed via the so-called **Quality of Service** (QOS). 
-- Each QOS is tailored to specific use cases or user groups. 
+- Each QOS is tailored to specific use cases or user groups and has different priorities assigned to it. 
 - The use of a specific QOS is controlled with `--qos=<qos_name>`. 
 - All QOSs define resources that are guaranteed for the lifetime of the job, with `--qos=preemptible` being the only exception. 
 - More details about the available QOS can be found in the [User Guide](user-guide/#available-resources).
