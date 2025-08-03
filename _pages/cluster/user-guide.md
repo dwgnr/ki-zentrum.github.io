@@ -113,11 +113,14 @@ The *Controlhost* is your login node and the place where you submit jobs to the 
 
 ## Available Resources
 
-The rough allocation of resources in Slurm is done using a so-called *Quality of Service* (QOS).
+The allocation of resources in Slurm is done using a so-called *Quality of Service* (QOS).
 Depending on the use case, certain types of resources are particularly needed (e.g., plenty of memory for data preprocessing).
-The different use cases can be covered by specifying the respective QOS in a Slurm job.
+The different use cases can be covered by specifying the respective QOS in a Slurm job. 
+Furthermore, each QOS has a priority weight assigned to it. 
+A QOS that allows users to request more resources receives a lower priority. 
+See the [Job Prioritization](#job-prioritization) section for more information on job priorities. 
 
-Users can have access to the following resources on the cluster:
+The following resources are available on the cluster:
 
 <div class="table-responsive">
   <table class="table table-striped table-hover table-bordered">
@@ -211,7 +214,7 @@ Users can have access to the following resources on the cluster:
 
 The values in the table represent **maximum values** available within the respective Quality of Service. 
 They do not necessarily need to be fully utilized. 
-In fact, we encourage users not to allocate all of the available resources simply because it's possible, to minimize their own wait time and to give other users a chance to receive faster job allocation.  
+In fact, we encourage users not to allocate all of the available resources simply because it's possible, to give other users a chance to receive faster job allocation.  
 
 Information on granular resource control can be found, for example, in the section [Creating Jobs](#creating-jobs).
 
@@ -243,18 +246,19 @@ Your e-mail should contain the following:
 - A brief reason why you need the additional resources
 - For students: The name of your advisor and the title of your project 
 
-## Job Prioritization on the Cluster
+## Job Prioritization
 
-Once all resources on the cluster are allocated, pending jobs are sorted by priority to determine which job will run next when resources become available. The cluster uses Slurm's [multifactor priority plugin](https://slurm.schedmd.com/priority_multifactor.html), which calculates a numerical priority score for each job based on multiple weighted components. The job with the highest total priority score is scheduled first.
+Once all resources on the cluster are allocated, pending jobs are sorted by priority to determine which job will run next when resources become available. 
+The cluster uses Slurm's [multifactor priority plugin](https://slurm.schedmd.com/priority_multifactor.html), which calculates a numerical priority score for each job based on multiple weighted components. The job with the highest total priority score is scheduled first.
 
 ### Factors Affecting Job Priority
 
 The following weights are used to compute job priority:
 
-- **TRES (Trackable Resources)**: Jobs requesting more CPU, memory, or GPUs get higher priority. 
+- **TRES (Trackable Resources)**: Jobs requesting more CPU, memory, or GPUs receive higher priority. 
 - **Age**: Jobs waiting longer accumulate higher priority over time. 
 - **QOS (Quality of Service)**: Each QOS level has an associated static priority boost.
-- **Job Size**: Larger jobs get slightly higher priority. 
+- **Job Size**: Larger jobs receive slightly higher priority. 
 - **Fairshare**: Ensures fair usage of resources across users and groups over time.
 
 ### Fairshare: Staff vs. Students
@@ -281,13 +285,13 @@ sacctmgr show qos format=name%20,priority
 
 Users can inspect how Slurm computed a job's priority using the `sprio` command. It breaks down the total priority into its individual components.
 
-#### Example
+**Example**
 
 ```bash
 $ sprio
-JOBID PARTITION      USER      PRIORITY        AGE  FAIRSHARE    JOBSIZE        QOS                      TRES
-46958 p2        staffmember       4982          0       3720         24       1000 cpu=25,mem=13,gres/gpu=20
-46959 p2        student12345      1768          0        506         24       1000 cpu=25,mem=13,gres/gpu=20
+JOBID PARTITION      USER      PRIORITY   AGE  FAIRSHARE    JOBSIZE   QOS               TRES
+46958 p2        staffmember       4982     0       3720         24    1000   cpu=25,mem=13,gres/gpu=20
+46959 p2        student12345      1768     0        506         24    1000   cpu=25,mem=13,gres/gpu=20
 ```
 - Both jobs request the same resources (same TRES weight).
 - Both jobs have the same QOS and job size contributions.
